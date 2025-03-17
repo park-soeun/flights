@@ -1,0 +1,95 @@
+---
+title: "항공기 데이터 분석"
+author: "6조 (박소은, 신인철, 이유진, 이정훈)"
+date: today
+format: html
+---
+
+# 분석 주제
+
+-   본 분석에서는 **flights**와 **planes** 데이터를 병합하여 특정 변수 간의 관계를 분석합니다.
+
+------------------------------------------------------------------------
+
+## **1. 사용 데이터**
+
+| 데이터셋       | 설명                                       |
+|----------------|--------------------------------------------|
+| `flights.csv`  | 항공편 정보 (출발지, 도착지, 지연 시간 등) |
+| `planes.csv`   | 항공기 정보 (제조 연도, 모델 등)           |
+| `airlines.csv` | 항공사 코드 및 항공사명 정보               |
+
+**병합(`merge`) 정보**
+
+```{python}
+#| eval: true
+#| echo: false
+from nycflights13 import flights, planes, airlines
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+```
+
+```{python}
+plane_df = planes.rename(columns={'year': 'manuf_year'})
+df = pd.merge(flights, plane_df, on='tailnum')
+```
+
+## **2. 데이터 전처리**
+
+1.  날짜 처리(`datetime` 변환)
+
+    ```{python}
+    df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour', 'minute']])
+    ```
+
+2.  문자열 처리 (항공사 코드 -\> 이름 매핑)
+
+    ```{python}
+    df = df.merge(airlines, on="carrier", how="left")
+    ```
+
+## **3. 분석**
+
+### 분석 1: 항공사별 출발 및 도착 지연 시간간의 관계 분석
+
+-   특정 항공사의 출발 지연과 도착 지연 시간이 다른 패턴을 보이는지 확인
+
+##### (1) 사용 데이터
+
+##### (2) 분석 목적
+
+-   항공사별 출발(`dep_delay`) 및 도착 지연(`arr_delay`) 시간이 어떤 패턴을 보이는지 분석
+-   출발 지연이 많으면 도착 지연도 많을까?
+-   특정 항공사는 출발이 늦지만 도착을 맞추는 경향이 있을까?
+
+##### (3) 가설
+
+-   전체적으로 출발 지연이 많을수록 도착 지연도 많을 가능성이 있다.
+
+##### (4) 분석 및 시각화
+
+```{python}
+delay_stats_by_carrier = flights.groupby('carrier')[['dep_delay', 'arr_delay']].mean().reset_index()
+
+delay_stats_by_carrier = delay_stats_by_carrier.merge(airlines, on='carrier', how='left')
+
+
+plt.figure(figsize=(10,6))
+sns.scatterplot(data=delay_stats_by_carrier, x='dep_delay', y='arr_delay', hue='name', s=100)
+plt.axline((0, 0), slope=1, linestyle="--", color="gray")  # y=x 대각선 추가 (출발=도착일 때)
+plt.xlabel("Average Departure Delay (minutes)")
+plt.ylabel("Average Arrival Delay (minutes)")
+plt.title("Scatter Plot: Departure vs Arrival Delay by Airline")
+plt.legend(title="Airline", bbox_to_anchor=(1.05, 1), loc='upper left')  # 범례 위치 조정
+plt.grid(True)
+plt.show()
+```
+
+##### (5) 결과
+
+-   대각선(y=x) 위에 있는 항공사 → 출발 지연보다 도착 지연이 많은 항공사
+-   대각선(y=x) 아래에 있는 항공사 → 출발은 늦었지만 도착을 맞추는 항공사
+-   출발 지연(`dep_delay`)이 많을수록 도착 지연(`arr_delay`)도 증가하는 경향
