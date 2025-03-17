@@ -4,6 +4,7 @@ author: "6조 (박소은, 신인철, 이유진, 이정훈)"
 date: today
 format: html
 ---
+# 이정훈
 
 # 분석 주제
 
