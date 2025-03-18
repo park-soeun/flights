@@ -1,0 +1,154 @@
+---
+title: "."
+title-slide-attributes:
+    data-background-image: "logo.PNG"
+    data-background-size: cover
+format:
+  revealjs:
+    theme: simple  # 기본 테마(원하는 테마 변경 가능)
+    css: styles.css
+    slide-number: true  # 페이지 번호 표시
+    footer: "Team 6 | LS BigData School | 2025"  # 푸터 설정
+    logo: "logo3.png"  # 로고 삽입
+---
+
+## 분석 주제
+
+- 본 분석에서는 **flights**와 **planes** 데이터를 병합하여 특정 변수 간의 관계를 분석합니다.
+
+---
+
+### **1. 사용 데이터**
+
+| 데이터셋       | 설명                                       |
+|---------------|-------------------------------------------|
+| `flights.csv`  | 항공편 정보 (출발지, 도착지, 지연 시간 등) |
+| `planes.csv`   | 항공기 정보 (제조 연도, 모델 등)           |
+| `airlines.csv` | 항공사 코드 및 항공사명 정보               |
+
+---
+
+```{python}
+#| echo: false
+from nycflights13 import flights, planes, airlines
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plane_df = planes.rename(columns={'year': 'manuf_year'})
+df = pd.merge(flights, plane_df, on='tailnum')
+```
+
+### **2. 데이터 전처리**
+
+#####  날짜 처리 (`datetime` 변환)
+```{python}
+df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour', 'minute']])
+```
+
+
+```{python}
+#| echo: false
+#| eval: true
+df['datetime'].info()
+
+```
+
+
+---
+
+##### 문자열 처리 (항공사 코드 -\> 이름 매핑)
+```{python}
+#| echo: true
+#| eval: true
+df = df.merge(airlines, on="carrier", how="left")   
+print(df.info())
+
+```
+
+---
+
+# **3. 분석**
+ **총 3개의 분석을 진행합니다.**
+
+- **3.1 항공사별 출발 및 도착 지연 시간 분석**
+- **3.2 제작 연도별 기체 성능 분석**
+- **3.3 특정 노선의 지연 시간 분석**
+
+---
+
+### **3.1 항공사별 출발 및 도착 지연 시간 분석** ✈️
+
+#####  **분석 목적**
+- 항공사별 출발(`dep_delay`) 및 도착 지연(`arr_delay`) 시간의 관계 분석  
+- 출발이 늦으면 도착도 늦을까?  
+
+#####  **데이터 시각화**
+```{python}
+delay_stats_by_carrier = flights.groupby('carrier')[['dep_delay', 'arr_delay']].mean().reset_index()
+delay_stats_by_carrier = delay_stats_by_carrier.merge(airlines, on='carrier', how='left')
+
+plt.figure(figsize=(10,6))
+sns.scatterplot(data=delay_stats_by_carrier, x='dep_delay', y='arr_delay', hue='name', s=100)
+plt.axline((0, 0), slope=1, linestyle="--", color="gray")  
+plt.xlabel("Average Departure Delay (minutes)")
+plt.ylabel("Average Arrival Delay (minutes)")
+plt.title("Departure vs Arrival Delay by Airline")
+plt.legend(title="Airline", bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.grid(True)
+plt.show()
+```
+
+---
+
+## **3.2 제작 연도별 기체 성능 분석** 🛩️
+
+#####  **분석 목적**
+- 항공기 제작 연도(`manuf_year`)에 따라 지연 시간 차이가 있을까?  
+- 오래된 기체일수록 지연이 많을까?
+
+#####  **데이터 시각화**
+```{python}
+delay_by_age = df.groupby('manuf_year')[['dep_delay', 'arr_delay']].mean().reset_index()
+
+plt.figure(figsize=(10,6))
+sns.lineplot(data=delay_by_age, x='manuf_year', y='dep_delay', label="Departure Delay")
+sns.lineplot(data=delay_by_age, x='manuf_year', y='arr_delay', label="Arrival Delay")
+plt.xlabel("Manufacture Year")
+plt.ylabel("Average Delay (minutes)")
+plt.title("Aircraft Age vs Delay Time")
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+---
+
+### **3.3 특정 노선의 지연 시간 분석** 🌍
+
+#####  **분석 목적**
+- 특정 노선(예: JFK → LAX)의 출발 및 도착 지연 시간이 특별한 패턴을 보일까?  
+- 특정 시간대에 지연이 집중되는가?
+
+#####  **데이터 시각화**
+```{python}
+jfk_lax_flights = df[df['dest'] == 'LAX']
+
+plt.figure(figsize=(10,6))
+sns.boxplot(data=jfk_lax_flights, x='hour', y='dep_delay')
+plt.xlabel("Departure Hour")
+plt.ylabel("Departure Delay (minutes)")
+plt.title("JFK → LAX: Departure Delay by Time of Day")
+plt.grid(True)
+plt.show()
+```
+
+---
+
+###  **결론**
+1️⃣ 항공사별로 **출발 지연과 도착 지연의 상관관계가 다름**  
+2️⃣ 오래된 기체일수록 **출발 및 도착 지연 시간이 증가하는 경향**  
+3️⃣ 특정 노선에서는 **출발 시간대에 따라 지연 패턴이 다름**  
+
+---
