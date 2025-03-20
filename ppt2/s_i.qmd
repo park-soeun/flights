@@ -67,6 +67,7 @@ df = df.merge(airlines, on="carrier", how="left")
 ```{python}
 #|echo: false
 pass_df.columns = pass_df.columns.str.lower()
+print(df.info())
 ```
 
 
@@ -84,11 +85,9 @@ pass_df.columns = pass_df.columns.str.lower()
 
 ### 4.1 탑승률과 항공편 지연 관계 분석
 
-- **만석에 가까울수록** 탑승 절차, 수하물 처리 등이 길어져 **지연**될 가능성이 있음
-
-<div id='font-red'>
- -> 탑승률이 높을수록 항공편 출발 지연이 증가하는가?
-</div>
+- 항공편 지연은 승객과 항공사 운영에 큰 영향을 미침
+- 지연이 발생하는 원인은 여러 가지지만, **탑승률(Load Factor)과의 관계를 분석**
+- **탑승률이 높아질수록 실제로 항공편이 더 지연되는지 확인**
 
 ---
 
@@ -96,12 +95,17 @@ pass_df.columns = pass_df.columns.str.lower()
 
 #### 추가 데이터 전처리
 
-- `t100.csv`에서 `origin`, `dest`, `carrier`가 기존 `flights.csv`에 존재하는 항목들만 남김
-    
+**탑승률을 계산하기 위해 필요한 전처리 과정**
+
+<div class=num>
+1️⃣ `t100.csv`(외부 데이터)에서 기존 `flights.csv`에 있는 **출발지(origin), 목적지(dest), 항공사(carrier)**만 필터링
+
 ```{python}
 #| echo: true
-# origin
-pass_df = pass_df[pass_df['origin'].isin(['EWR', 'LGA', 'JFK'])]
+#| code-fold: true
+# origin#| 
+ori_list = df['origin'].unique()
+pass_df = pass_df[pass_df['origin'].isin(ori_list)]
 
 # dest
 dest_list = df['dest'].unique()
@@ -112,18 +116,15 @@ carrier_list = df['carrier'].unique()
 pass_df = pass_df[pass_df['carrier'].isin(carrier_list)]
 ```  
 
-
-- `year`, `month`, `carrier`, `origin`, `dest` 기준으로 `seats`, `passenger` 합산
+2️⃣ 탑승률 계산을 위해 연, 월, 항공사, 출발지, 도착지 기준으로 `seats`(좌석 수)와 `passengers`(승객 수)를 합산
 
 ```{python}
+#| code-fold: true
+
 pass_grouped = pass_df.groupby(['year', 'month', 'carrier', 'origin', 'dest'])[['seats', 'passengers']].sum().reset_index()
 ```
 
-
----
-
-- `flights.csv`를 년/월/항공사/출발지/목적지 를 기준으로 그룹화하여 `flight_count`, `avg_dep_delay` 등을 계산
-
+3️⃣ 기존 항공편 데이터(`flights.csv`)와 그룹화 기준을 맞춰 `flight_count`, `avg_dep_delay`, `avg_arr_delay` 계산
 ```{python}
 #| code-fold: true
 flight_grouped = df.groupby(['year', 'month', 'carrier', 'origin', 'dest']).agg(
@@ -135,10 +136,7 @@ flight_grouped = df.groupby(['year', 'month', 'carrier', 'origin', 'dest']).agg(
 ```
 
 
-<br>
-
-- 최종적으로 두 데이터를 병합 후, 탑승률(`passengers`, `seats`) 계산 
-
+4️⃣ 두 데이터를 병합하여 `load_factor = passengers / seats` 계산
 ```{python}
 #| code-fold: true
 merged_df = flight_grouped.merge(
@@ -149,15 +147,10 @@ merged_df = flight_grouped.merge(
 merged_df['load_factor'] = merged_df['passengers'] / merged_df['seats']
 ```
 
-
-
-<br>
-
-- 이상치 제거(IQR 방식)
+5️⃣ 이상치 제거(IQR 방식)
 
 ```{python}
-#| echo: true
-#| code-fold: true
+#| echo: false
 def remove_outliers(df, column):
     Q1 = df[column].quantile(0.25)  # 1사분위수 (Q1)
     Q3 = df[column].quantile(0.75)  # 3사분위수 (Q3)
@@ -166,12 +159,12 @@ def remove_outliers(df, column):
     upper_bound = Q3 + 1.5 * IQR  # 이상치 상한
     return df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
 
+cleaned_df = remove_outliers(merged_df, "avg_dep_delay")
+
 ```
 
-```{python}
-#| code-fold: true
-cleaned_df = remove_outliers(merged_df, "avg_dep_delay")
-```
+
+</div>
 
 ---
 
@@ -184,7 +177,8 @@ cleaned_df = remove_outliers(merged_df, "avg_dep_delay")
 cleaned_df["load_factor_bin"] = pd.cut(cleaned_df["load_factor"], bins=[0, 0.3, 0.5, 0.7, 0.9, 1], labels=["0-30%", "30-50%", "50-70%", "70-90%", "90-100%"])
 summary_stats = cleaned_df.groupby("load_factor_bin")[["avg_dep_delay", "avg_arr_delay"]].mean().reset_index()
 plt.figure(figsize=(10, 6))
-sns.barplot(data=summary_stats, x="load_factor_bin", y="avg_dep_delay", color="blue")
+sns.barplot(data=summary_stats, x="load_factor_bin", y="avg_dep_delay", palette="Reds")
+
 
 plt.xlabel("Load Factor Range")
 plt.ylabel("Average Departure Delay (minutes)")
