@@ -10,6 +10,10 @@
     padding-bottom: 30px;
 }
 
+.reveal ul {
+    font-size: 30px;
+}
+
 /* 모든 슬라이드에 배경 이미지 적용 (타이틀 포함) */
 .reveal .slide-background {
     background-image: url("bg.PNG"); /* 배경 이미지 */

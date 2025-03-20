@@ -10,6 +10,7 @@ format:
     slide-number: true  # 페이지 번호 표시
     footer: "Team 6 | LS BigData School | 2025"  # 푸터 설정
     logo: "logo3.png"  # 로고 삽입
+    code-fold: true
 ---
 
 ## 분석 주제
@@ -102,26 +103,112 @@ plt.show()
 
 ---
 
-## **3.2 제작 연도별 기체 성능 분석** 🛩️
+## **3.2 제조사별 엔진 Delay 시간 분석** 🛩️
+
 
 #####  **분석 목적**
-- 항공기 제작 연도(`manuf_year`)에 따라 지연 시간 차이가 있을까?  
-- 오래된 기체일수록 지연이 많을까?
 
-#####  **데이터 시각화**
+- 항공기 엔진 제조사중 가장 출발 지연에 가장 많은 영향을 끼치는 것은?
+- 가장 유명한 Boeing이 지연이 많을 것이다.
+---
+
+#####  **데이터 전처리**
 ```{python}
-delay_by_age = df.groupby('manuf_year')[['dep_delay', 'arr_delay']].mean().reset_index()
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-plt.figure(figsize=(10,6))
-sns.lineplot(data=delay_by_age, x='manuf_year', y='dep_delay', label="Departure Delay")
-sns.lineplot(data=delay_by_age, x='manuf_year', y='arr_delay', label="Arrival Delay")
-plt.xlabel("Manufacture Year")
-plt.ylabel("Average Delay (minutes)")
-plt.title("Aircraft Age vs Delay Time")
-plt.legend()
-plt.grid(True)
-plt.show()
+from nycflights13 import flights, planes
+
 ```
+
+```{python}
+#| echo: true
+df = pd.merge(flights,planes, on ='tailnum', how='inner')
+
+df['delay_time'] = df['arr_delay'] + df['dep_delay']
+
+df_air_time = (
+    df.groupby(['manufacturer', 'model'])["delay_time"]
+    .agg(['mean', 'count']).sort_values('mean', ascending=False)  
+).reset_index()
+print(df_air_time)
+```
+
+- 도착 지연시간과 출발 지연시간을 더하여 하나의 데이터 생성
+- 제조사별 모델을 그룹화하여 평균과 비행 횟수를 구함
+- 이때 비행 횟수가 적은 데이터는 다른 영향이 있을거라 생각함
+
+---
+
+#####  **데이터 전처리**
+
+```{python}
+#| echo: true
+df_air_time = df_air_time.drop(df_air_time[df_air_time['count']<1000].index)
+df_air_time.shape   # 기존 147개 데이터에서 38개의 데이터로 축소
+
+delay_time_top = df_air_time.nlargest(10, 'mean')
+delay_time_bottom = df_air_time.nsmallest(10, 'mean')
+# 상위 10개, 하위 10개 추출
+print(delay_time_top)
+print(delay_time_bottom)
+
+
+# 
+```
+- 운항 횟수가 적은 운행은 다른 영향으로 지연이 되었을 거라 판단.
+- 1000회 이상 운항된 모델들로만 필터링 실시
+- 기존 147개의 데이터에서 38개의 데이터로 축소됨
+ 
+---
+
+#####  **데이터 전처리**
+
+```{python}
+#| echo: true
+delay_time_top['manu_model'] = delay_time_top['manufacturer'].apply(lambda x: x[:3] + (x.split()[1][0] if len(x.split()) > 1 else '')) + "/" + delay_time_top['model']
+delay_time_bottom['manu_model'] = delay_time_bottom['manufacturer'].apply(lambda x: x[:3] + (x.split()[1][0] if len(x.split()) > 1 else '')) + "/" + delay_time_bottom['model']
+print(delay_time_top)
+print(delay_time_bottom)
+```
+- 그래프 생성시 제조사, 모델명을 한눈에 알기 위해
+- 제조사 앞글자 3개와 모델명 합친 열 manu_model을 생성
+
+---
+
+```{python}
+plt.figure(figsize=(14,7))
+sns.barplot(x=delay_time_top['manu_model'],y=delay_time_top['mean'], palette="Reds_r")
+plt.ylim(0, 50)
+plt.xlabel("model by manufacturer",fontsize=20)
+plt.ylabel("delay time_mean",fontsize=20)
+plt.title("Bad flights",fontsize=20)
+plt.xticks(rotation=40,fontsize=16, fontweight='bold');
+```
+
+---
+
+```{python}
+plt.figure(figsize=(14,7))
+sns.barplot(x=delay_time_bottom['manu_model'],y=delay_time_bottom['mean'], palette="Blues_r")
+plt.ylim(-5, 10)
+plt.xlabel("model by manufacturer",fontsize=20)
+plt.ylabel("delay time_mean",fontsize=20)
+plt.title("Good flights",fontsize=20)
+plt.xticks(rotation=40,fontsize=16, fontweight='bold');
+```
+
+---
+
+#### 결론
+
+- 가장 신뢰성이 떨어지는 기종 Top3는 '**EMB**'사의 '**EMB-145LR**'기종, '**BOE**'사의 '**717-200**'기종 , '**CAN**'사의 '**CL-600-2B19**'기종이다
+- 또한 제조사만 봤을때 '**BOMI**'사 **4대**, '**EMB**'사 **2대** , '**BOE**'사 **2대**가 나타나여 이 제조사들의 model이 지연이 잘되는 걸 알 수 있다.
+<br>
+- 반대로 신뢰성이 높은 기종 Top3는 '**BOE**'사의 '**757-231**'기종, '**BOE**'사의 '**757-2Q8**' 기종, '**AIR**'사의 '**A321-211**'기종 이다.
+- 또한 제조사만 봤을때 
+-
 
 ---
 

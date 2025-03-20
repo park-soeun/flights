@@ -234,7 +234,7 @@
 
 <h3 id="데이터-전처리"><strong>2. 데이터 전처리</strong></h3>
 <h5 id="날짜-처리-datetime-변환">날짜 처리 (<code>datetime</code> 변환)</h5>
-<div id="f599e4d3" class="cell" data-execution_count="3">
+<div id="7b8a3772" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.series.Series'&gt;
 RangeIndex: 284170 entries, 0 to 284169
@@ -250,9 +250,12 @@ memory usage: 2.2 MB</code></pre>
 <section class="slide level2">
 
 <h5 id="문자열-처리-항공사-코드---이름-매핑">문자열 처리 (항공사 코드 -&gt; 이름 매핑)</h5>
-<div id="db6487b3" class="cell" data-execution_count="4">
+<div id="b89684d0" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a>df <span class="op">=</span> df.merge(airlines, on<span class="op">=</span><span class="st">"carrier"</span>, how<span class="op">=</span><span class="st">"left"</span>)   </span>
 <span id="cb2-2"><a href=""></a><span class="bu">print</span>(df.info())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 284170 entries, 0 to 284169
@@ -317,7 +320,7 @@ None</code></pre>
 <li>출발이 늦으면 도착도 늦을까?</li>
 </ul>
 <h5 id="데이터-시각화"><strong>데이터 시각화</strong></h5>
-<div id="1b2a7132" class="cell" data-execution_count="5">
+<div id="3af603a7" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -327,24 +330,189 @@ None</code></pre>
 </div>
 </div>
 </section>
-<section id="제작-연도별-기체-성능-분석" class="slide level2">
-<h2><strong>3.2 제작 연도별 기체 성능 분석</strong> 🛩️</h2>
+<section id="제조사별-엔진-delay-시간-분석" class="slide level2">
+<h2><strong>3.2 제조사별 엔진 Delay 시간 분석</strong> 🛩️</h2>
 <h5 id="분석-목적-1"><strong>분석 목적</strong></h5>
 <ul>
-<li>항공기 제작 연도(<code>manuf_year</code>)에 따라 지연 시간 차이가 있을까?<br>
-</li>
-<li>오래된 기체일수록 지연이 많을까?</li>
+<li>항공기 엔진 제조사중 가장 출발 지연에 가장 많은 영향을 끼치는 것은?</li>
+<li>가장 유명한 Boeing이 지연이 많을 것이다.</li>
 </ul>
-<h5 id="데이터-시각화-1"><strong>데이터 시각화</strong></h5>
-<div id="b65332e2" class="cell" data-execution_count="6">
+</section>
+<section class="slide level2">
+
+<h5 id="데이터-전처리-1"><strong>데이터 전처리</strong></h5>
+<div id="a517c1d6" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a>df <span class="op">=</span> pd.merge(flights,planes, on <span class="op">=</span><span class="st">'tailnum'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb4-2"><a href=""></a></span>
+<span id="cb4-3"><a href=""></a>df[<span class="st">'delay_time'</span>] <span class="op">=</span> df[<span class="st">'arr_delay'</span>] <span class="op">+</span> df[<span class="st">'dep_delay'</span>]</span>
+<span id="cb4-4"><a href=""></a></span>
+<span id="cb4-5"><a href=""></a>df_air_time <span class="op">=</span> (</span>
+<span id="cb4-6"><a href=""></a>    df.groupby([<span class="st">'manufacturer'</span>, <span class="st">'model'</span>])[<span class="st">"delay_time"</span>]</span>
+<span id="cb4-7"><a href=""></a>    .agg([<span class="st">'mean'</span>, <span class="st">'count'</span>]).sort_values(<span class="st">'mean'</span>, ascending<span class="op">=</span><span class="va">False</span>)  </span>
+<span id="cb4-8"><a href=""></a>).reset_index()</span>
+<span id="cb4-9"><a href=""></a><span class="bu">print</span>(df_air_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>             manufacturer     model      mean  count
+0        AIRBUS INDUSTRIE  A330-223  452.0000      1
+1                  BOEING   747-451  252.0000      1
+2                  BOEING   757-351  155.2500      4
+3                  BOEING   777-224   91.0000      4
+4    GULFSTREAM AEROSPACE      G-IV   87.5000     12
+..                    ...       ...       ...    ...
+142                AIRBUS  A330-323  -19.0000      1
+143                BOEING   757-212  -19.0000      2
+144                BOEING   737-524  -20.2500      4
+145                BOEING   737-8FH  -24.0625     16
+146                BOEING   737-3A4  -25.0000      1
+
+[147 rows x 4 columns]</code></pre>
+</div>
+</div>
+<ul>
+<li>도착 지연시간과 출발 지연시간을 더하여 하나의 데이터 생성</li>
+<li>제조사별 모델을 그룹화하여 평균과 비행 횟수를 구함</li>
+<li>이때 비행 횟수가 적은 데이터는 다른 영향이 있을거라 생각함</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h5 id="데이터-전처리-2"><strong>데이터 전처리</strong></h5>
+<div id="a904fbaa" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a>df_air_time <span class="op">=</span> df_air_time.drop(df_air_time[df_air_time[<span class="st">'count'</span>]<span class="op">&lt;</span><span class="dv">1000</span>].index)</span>
+<span id="cb6-2"><a href=""></a>df_air_time.shape   <span class="co"># 기존 147개 데이터에서 38개의 데이터로 축소</span></span>
+<span id="cb6-3"><a href=""></a></span>
+<span id="cb6-4"><a href=""></a>delay_time_top <span class="op">=</span> df_air_time.nlargest(<span class="dv">10</span>, <span class="st">'mean'</span>)</span>
+<span id="cb6-5"><a href=""></a>delay_time_bottom <span class="op">=</span> df_air_time.nsmallest(<span class="dv">10</span>, <span class="st">'mean'</span>)</span>
+<span id="cb6-6"><a href=""></a><span class="co"># 상위 10개, 하위 10개 추출</span></span>
+<span id="cb6-7"><a href=""></a><span class="bu">print</span>(delay_time_top)</span>
+<span id="cb6-8"><a href=""></a><span class="bu">print</span>(delay_time_bottom)</span>
+<span id="cb6-9"><a href=""></a></span>
+<span id="cb6-10"><a href=""></a></span>
+<span id="cb6-11"><a href=""></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     manufacturer        model       mean  count
+18                        EMBRAER    EMB-145LR  38.964306  26475
+22                         BOEING      717-200  35.852358   3075
+23                       CANADAIR  CL-600-2B19  34.992627   1492
+24                        EMBRAER    EMB-145XR  34.796349  13312
+37                         BOEING      737-7H4  28.022783  10227
+38                 BOMBARDIER INC  CL-600-2C10  27.439327   7903
+40                 BOMBARDIER INC  CL-600-2D24  26.665237  11656
+52                 BOMBARDIER INC  CL-600-2B19  21.422945   7871
+54                         AIRBUS     A320-232  20.840146  30972
+59  MCDONNELL DOUGLAS CORPORATION        MD-88  19.028067   1247
+          manufacturer           model      mean  count
+128             BOEING         757-231 -2.109045   2366
+122             BOEING         757-2Q8 -0.293210   2268
+108             AIRBUS        A321-211  5.255715   1181
+104  MCDONNELL DOUGLAS  DC-9-82(MD-82)  6.566601   2545
+103             BOEING         737-732  6.639552   1340
+102             BOEING         737-832  7.598017   8672
+101   AIRBUS INDUSTRIE        A319-114  7.683273   4938
+99    AIRBUS INDUSTRIE        A319-112  8.519237   5822
+98              AIRBUS        A319-114  8.647260   4672
+97              BOEING         767-223  8.659091   4224</code></pre>
+</div>
+</div>
+<ul>
+<li>운항 횟수가 적은 운행은 다른 영향으로 지연이 되었을 거라 판단.</li>
+<li>1000회 이상 운항된 모델들로만 필터링 실시</li>
+<li>기존 147개의 데이터에서 38개의 데이터로 축소됨</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h5 id="데이터-전처리-3"><strong>데이터 전처리</strong></h5>
+<div id="64dc05a2" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a>delay_time_top[<span class="st">'manu_model'</span>] <span class="op">=</span> delay_time_top[<span class="st">'manufacturer'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[:<span class="dv">3</span>] <span class="op">+</span> (x.split()[<span class="dv">1</span>][<span class="dv">0</span>] <span class="cf">if</span> <span class="bu">len</span>(x.split()) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">''</span>)) <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> delay_time_top[<span class="st">'model'</span>]</span>
+<span id="cb8-2"><a href=""></a>delay_time_bottom[<span class="st">'manu_model'</span>] <span class="op">=</span> delay_time_bottom[<span class="st">'manufacturer'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[:<span class="dv">3</span>] <span class="op">+</span> (x.split()[<span class="dv">1</span>][<span class="dv">0</span>] <span class="cf">if</span> <span class="bu">len</span>(x.split()) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">''</span>)) <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> delay_time_bottom[<span class="st">'model'</span>]</span>
+<span id="cb8-3"><a href=""></a><span class="bu">print</span>(delay_time_top)</span>
+<span id="cb8-4"><a href=""></a><span class="bu">print</span>(delay_time_bottom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     manufacturer        model       mean  count  \
+18                        EMBRAER    EMB-145LR  38.964306  26475   
+22                         BOEING      717-200  35.852358   3075   
+23                       CANADAIR  CL-600-2B19  34.992627   1492   
+24                        EMBRAER    EMB-145XR  34.796349  13312   
+37                         BOEING      737-7H4  28.022783  10227   
+38                 BOMBARDIER INC  CL-600-2C10  27.439327   7903   
+40                 BOMBARDIER INC  CL-600-2D24  26.665237  11656   
+52                 BOMBARDIER INC  CL-600-2B19  21.422945   7871   
+54                         AIRBUS     A320-232  20.840146  30972   
+59  MCDONNELL DOUGLAS CORPORATION        MD-88  19.028067   1247   
+
+          manu_model  
+18     EMB/EMB-145LR  
+22       BOE/717-200  
+23   CAN/CL-600-2B19  
+24     EMB/EMB-145XR  
+37       BOE/737-7H4  
+38  BOMI/CL-600-2C10  
+40  BOMI/CL-600-2D24  
+52  BOMI/CL-600-2B19  
+54      AIR/A320-232  
+59        MCDD/MD-88  
+          manufacturer           model      mean  count           manu_model
+128             BOEING         757-231 -2.109045   2366          BOE/757-231
+122             BOEING         757-2Q8 -0.293210   2268          BOE/757-2Q8
+108             AIRBUS        A321-211  5.255715   1181         AIR/A321-211
+104  MCDONNELL DOUGLAS  DC-9-82(MD-82)  6.566601   2545  MCDD/DC-9-82(MD-82)
+103             BOEING         737-732  6.639552   1340          BOE/737-732
+102             BOEING         737-832  7.598017   8672          BOE/737-832
+101   AIRBUS INDUSTRIE        A319-114  7.683273   4938        AIRI/A319-114
+99    AIRBUS INDUSTRIE        A319-112  8.519237   5822        AIRI/A319-112
+98              AIRBUS        A319-114  8.647260   4672         AIR/A319-114
+97              BOEING         767-223  8.659091   4224          BOE/767-223</code></pre>
+</div>
+</div>
+<ul>
+<li>그래프 생성시 제조사, 모델명을 한눈에 알기 위해</li>
+<li>제조사 앞글자 3개와 모델명 합친 열 manu_model을 생성</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<div id="20d54d1f" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="250318_files/figure-revealjs/cell-7-output-1.png" width="819" height="523"></p>
+<p><img data-src="250318_files/figure-revealjs/cell-11-output-1.png" width="1135" height="767"></p>
 </figure>
 </div>
 </div>
 </div>
+</section>
+<section class="slide level2">
+
+<div id="a1e2bdc5" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="250318_files/figure-revealjs/cell-12-output-1.png" width="1136" height="798"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h4 id="결론">결론</h4>
+<ul>
+<li>가장 신뢰성이 떨어지는 기종 Top3는 ‘<strong>EMB</strong>’사의’<strong>EMB-145LR</strong>’기종, ‘<strong>BOE</strong>’사의’<strong>717-200</strong>’기종 , ‘<strong>CAN</strong>’사의’<strong>CL-600-2B19</strong>’기종이다</li>
+<li>또한 제조사만 봤을때 ‘<strong>BOMI</strong>’사 <strong>4대</strong>,’<strong>EMB</strong>’사 <strong>2대</strong> , ’<strong>BOE</strong>’사 <strong>2대</strong>가 나타나여 이 제조사들의 model이 지연이 잘되는 걸 알 수 있다. <br></li>
+<li>반대로 신뢰성이 높은 기종 Top3는 ‘<strong>BOE</strong>’사의’<strong>757-231</strong>’기종, ‘<strong>BOE</strong>’사의’<strong>757-2Q8</strong>’ 기종, ‘<strong>AIR</strong>’사의’<strong>A321-211</strong>’기종 이다.</li>
+<li>또한 제조사만 봤을때</li>
+<li></li>
+</ul>
 </section>
 <section class="slide level2">
 
@@ -355,12 +523,12 @@ None</code></pre>
 </li>
 <li>특정 시간대에 지연이 집중되는가?</li>
 </ul>
-<h5 id="데이터-시각화-2"><strong>데이터 시각화</strong></h5>
-<div id="bfdbda21" class="cell" data-execution_count="7">
+<h5 id="데이터-시각화-1"><strong>데이터 시각화</strong></h5>
+<div id="65484fdb" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="250318_files/figure-revealjs/cell-8-output-1.png" width="816" height="523"></p>
+<p><img data-src="250318_files/figure-revealjs/cell-13-output-1.png" width="816" height="523"></p>
 </figure>
 </div>
 </div>
@@ -368,7 +536,7 @@ None</code></pre>
 </section>
 <section class="slide level2">
 
-<h3 id="결론"><strong>결론</strong></h3>
+<h3 id="결론-1"><strong>결론</strong></h3>
 <p>1️⃣ 항공사별로 <strong>출발 지연과 도착 지연의 상관관계가 다름</strong><br>
 2️⃣ 오래된 기체일수록 <strong>출발 및 도착 지연 시간이 증가하는 경향</strong><br>
 3️⃣ 특정 노선에서는 <strong>출발 시간대에 따라 지연 패턴이 다름</strong></p>
