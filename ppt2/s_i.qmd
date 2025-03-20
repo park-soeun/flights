@@ -17,24 +17,22 @@ format:
 - 항공편 지연은 항공사, 공항 운영, 승객에게 큰 영향을 미치는 중요한 요소
 - 지연을 유발하는 다양한 요인(탑승률, 항공기 모델, 노선 등)에 대한 분석 필요
 
-### 분석 목표:
+#### 분석 목표:
 - 탑승률과 지연의 관계 분석
-- 제조사별 기체 성능과 지연 패턴 분석
-- 특정 노선별 지연 발생 패턴 분석
+- 기체 제조사/모델별 지연 시간 분석
+- 
 
 
 ---
 
 ## 2. 사용 데이터
 
-<br>
-
-| 데이터셋       | 설명                                       |
-|---------------|-------------------------------------------|
-| `flights.csv`  | 항공편 정보 (출발지, 도착지, 지연 시간 등) |
-| `planes.csv`   | 항공기 정보 (제조 연도, 모델 등)           |
-| `airlines.csv` | 항공사 코드 및 항공사명 정보               |
-| `t100.csv`     | 미국 국내선 항공사의 운항 실적 (항공편 수, 좌석 수, 승객 수, 운항 거리 등) 제공 |
+| 데이터셋       | 데이터 출처     | 설명                                       |
+|---------------|-----------------|-------------------------------------------|
+| `flights.csv`  | 내부 데이터 | 항공편 정보 (출발지, 도착지, 지연 시간 등) |
+| `planes.csv`   | 내부 데이터 | 항공기 정보 (제조 연도, 모델 등)           |
+| `airlines.csv` | 내부 데이터 | 항공사 코드 및 항공사명 정보               |
+| `t100.csv`     | 외부 데이터 | 미국 국내선 항공사의 운항 실적 (항공편 수, 좌석 수, 승객 수, 운항 거리 등) 제공 |
 
 ```{python}
 #| echo: false
@@ -53,29 +51,21 @@ pass_df = pd.read_csv('../ppt/data/t100.csv')
 
 ## 3. 공통 데이터 전처리
 
+
 1. `flights.csv`와 `planes.csv`를 `tailnum` 기준으로 병합
-```{python}
-df = pd.merge(flights, plane_df, on='tailnum')
-```
-
-
 2. `datetime` 컬럼 생성 (`year`, `month`, `day`, `hour`, `minute`를 변환)
-
-```{python}
-df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour', 'minute']])
-```
-
-
 3. `airlines.csv`를 `carrier` 기준으로 병합하여 항공사명 추가
 
+
 ```{python}
+df = pd.merge(flights, plane_df, on='tailnum')
+df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour', 'minute']])
 df = df.merge(airlines, on="carrier", how="left")
 ```
 
 
-4. `t100.csv`의 columns를 소문자로 변경
-
 ```{python}
+#|echo: false
 pass_df.columns = pass_df.columns.str.lower()
 ```
 
@@ -94,8 +84,11 @@ pass_df.columns = pass_df.columns.str.lower()
 
 ### 4.1 탑승률과 항공편 지연 관계 분석
 
-- 만석에 가까울수록 탑승 절차, 수하물 처리 등이 길어져 지연될 가능성이 있음
-##### -> 탑승률이 높을수록 항공편 출발 지연이 증가하는가?
+- **만석에 가까울수록** 탑승 절차, 수하물 처리 등이 길어져 **지연**될 가능성이 있음
+
+<div id='font-red'>
+ -> 탑승률이 높을수록 항공편 출발 지연이 증가하는가?
+</div>
 
 ---
 
@@ -120,8 +113,6 @@ pass_df = pass_df[pass_df['carrier'].isin(carrier_list)]
 ```  
 
 
-<br>
-
 - `year`, `month`, `carrier`, `origin`, `dest` 기준으로 `seats`, `passenger` 합산
 
 ```{python}
@@ -134,6 +125,7 @@ pass_grouped = pass_df.groupby(['year', 'month', 'carrier', 'origin', 'dest'])[[
 - `flights.csv`를 년/월/항공사/출발지/목적지 를 기준으로 그룹화하여 `flight_count`, `avg_dep_delay` 등을 계산
 
 ```{python}
+#| code-fold: true
 flight_grouped = df.groupby(['year', 'month', 'carrier', 'origin', 'dest']).agg(
     flight_count=('flight', 'count'),
     avg_dep_delay=('dep_delay', 'mean'),
@@ -148,6 +140,7 @@ flight_grouped = df.groupby(['year', 'month', 'carrier', 'origin', 'dest']).agg(
 - 최종적으로 두 데이터를 병합 후, 탑승률(`passengers`, `seats`) 계산 
 
 ```{python}
+#| code-fold: true
 merged_df = flight_grouped.merge(
     pass_grouped,
     on=['year', 'month', 'carrier', 'origin', 'dest'],
@@ -163,7 +156,8 @@ merged_df['load_factor'] = merged_df['passengers'] / merged_df['seats']
 - 이상치 제거(IQR 방식)
 
 ```{python}
-#| echo: false
+#| echo: true
+#| code-fold: true
 def remove_outliers(df, column):
     Q1 = df[column].quantile(0.25)  # 1사분위수 (Q1)
     Q3 = df[column].quantile(0.75)  # 3사분위수 (Q3)
@@ -175,6 +169,7 @@ def remove_outliers(df, column):
 ```
 
 ```{python}
+#| code-fold: true
 cleaned_df = remove_outliers(merged_df, "avg_dep_delay")
 ```
 
@@ -185,14 +180,15 @@ cleaned_df = remove_outliers(merged_df, "avg_dep_delay")
 
 
 ```{python}
+#| code-fold: true
 cleaned_df["load_factor_bin"] = pd.cut(cleaned_df["load_factor"], bins=[0, 0.3, 0.5, 0.7, 0.9, 1], labels=["0-30%", "30-50%", "50-70%", "70-90%", "90-100%"])
 summary_stats = cleaned_df.groupby("load_factor_bin")[["avg_dep_delay", "avg_arr_delay"]].mean().reset_index()
 plt.figure(figsize=(10, 6))
 sns.barplot(data=summary_stats, x="load_factor_bin", y="avg_dep_delay", color="blue")
 
-plt.xlabel("Load Factor (탑승률) 범위")
-plt.ylabel("평균 출발 지연 시간 (분)")
-plt.title("탑승률에 따른 평균 출발 지연 시간")
+plt.xlabel("Load Factor Range")
+plt.ylabel("Average Departure Delay (minutes)")
+plt.title("Average Departure Delay by Load Factor")
 plt.grid(axis="y")
 plt.show()
 ```
@@ -213,7 +209,7 @@ plt.show()
 
 #### 제조사들의 결함 문제
 
-![](img\EMB.png){style="position: absolute; width: 100%; height: 100%;"}
+![](img\EMB.png){style="position: absolute; width: 80%; height: 90%;"}
 ![](img\BOE.png){style="position: absolute; bottom: 50px; right: 50px; width: 50%; height: 60%;"}
 ---
 
@@ -348,27 +344,23 @@ plt.xticks(rotation=40,fontsize=16, fontweight='bold');
 ### 피해야 할 비행기
 
 
+<div class="plane_images">
 
-::: {.column width="50%"}
-
+<div class="plane_image">
 <h3 style="font-size: 30px;">ERJ 145</h3>
-![](img\erj145_kp.jpg){width=60% height=50%}
+![](img\erj145_kp.jpg)
+</div>
 
-:::
 
-
-::: {.column width="50%"}
-
+<div class="plane_image">
 <h3 style="font-size: 30px;">BOE 717</h3>
-![](img\boe717.jpg){width=60% height=50%}
+![](img\boe717.jpg)
+</div>
 
-:::
 
-
-::: {.column width="50%"}
-
+<div class="plane_image">
 <h3 style="font-size: 30px;">CL-600-2B19</h3>
-![](img\CL-600-2B19.jpg){width=60% height=50%}
+![](img\CL-600-2B19.jpg)
+</div>
 
-:::
-
+</div>

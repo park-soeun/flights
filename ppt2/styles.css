@@ -10,6 +10,10 @@
     padding-bottom: 30px;
 }
 
+.reveal h2 {
+    padding-bottom: 50px;
+    font-size: 50px;
+}
 .reveal ul {
     font-size: 30px;
 }
@@ -56,13 +60,83 @@
 
 
 /* 특정 코드 블록 (예: Python) 색상 변경 */
-pre {
-    background-color: #e6f7ff;  /* 연한 파란색 배경 */
+.reveal pre {
+    border: 3px solid;
+    border-radius: 8px; /* 모서리 둥글게 */
     border-radius: 5px;
     padding: 10px;
+    width: 100%;
 }
 
 #subject_list h4{
     padding-top: 20px;
     padding-left: 20px;
+}
+
+.reveal li {
+    font-size: 25px;
+}
+
+.reveal code {
+    background-color: rgba(184, 184, 184, 0.301);
+}
+
+
+.reveal th {
+    font-size: 30px;
+}
+
+.reveal table td {
+    font-size: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+.reveal #font-red p{
+    color: rgb(179, 0, 0);
+}
+
+.reveal summary {
+    font-size: 20px;
+    padding-left: 30px;
+}
+
+.reveal .sourceCode {
+    width: 98%;
+    height: 98%;
+}
+
+.reveal .detail {
+    margin-bottom: 0;
+}
+
+.reveal .figure .img {
+    width: 80%;
+    height: 80%;
+}
+
+.reveal .code-fold {
+    margin-bottom: 0;
+}
+
+
+.reveal .plane_images {
+    display: flex;             /* Flexbox 적용 */
+    justify-content: space-between; /* 요소 간 간격을 균등하게 배치 */
+    align-items: center;       /* 이미지와 텍스트를 수직 정렬 */
+    gap: 20px;                 /* 각 요소 사이 간격 */
+    width: 100%;               /* 전체 너비 사용 */
+    padding: 10px 0;           /* 위아래 여백 추가 */
+}
+
+.reveal .plane_image {
+    text-align: center;        /* 제목 & 이미지 중앙 정렬 */
+    flex: 1;                   /* 동일한 너비를 가지도록 설정 */
+}
+
+.reveal .plane_image img {
+    max-width: 100%;            /* 이미지 크기 조정 */
+    height: 100%;              /* 원본 비율 유지 */
+    object-fit: contain;       /* 이미지가 비율을 유지하면서 들어가도록 설정 */
 }
