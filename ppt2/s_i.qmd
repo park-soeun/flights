@@ -224,11 +224,10 @@ plt.show()
 - 도착 지연시간과 출발 지연시간을 더하여 새로운 column 생성
 ```{python}
 df['delay_time'] = df['arr_delay'] + df['dep_delay']
+print(df['delay_time'].head())
 ```
 
-
-
-<br>
+---
 
 - 제조사별 모델을 그룹화하여 delay 평균과 비행 횟수를 구함
 ```{python}
@@ -236,13 +235,14 @@ df_air_time = (
     df.groupby(['manufacturer', 'model'])["delay_time"]
     .agg(['mean', 'count']).sort_values('mean', ascending=False)  
 ).reset_index()
-
+df_air_time.head()
 ```
 
 ---
 
 - 운항 횟수가 1000회 미만인 데이터를 제거하여 신뢰성 있는 데이터만 유지 (147개 -> 38개)
 - 출발 지연시간이 가장 긴 상위 10개 및 가장 짧은 하위 10개 기종 추출
+- .nlargest(), nsmallest() 를 사용해서 상,하위 10개의 'mean'열 데이터 추출
 
 ```{python}
 #| code-fold: true
@@ -251,10 +251,28 @@ df_air_time.shape   # 기존 147개 데이터에서 38개의 데이터로 축소
 
 delay_time_top = df_air_time.nlargest(10, 'mean')
 delay_time_bottom = df_air_time.nsmallest(10, 'mean')
-# 상위 10개, 하위 10개 추출
-print(delay_time_top)
-print(delay_time_bottom)
 ```
+
+::: {.column width="50%"}
+
+상위 10개 추출
+```{python}
+#| echo: false
+print(delay_time_top[['model','mean','count']])
+
+```
+
+:::
+
+:::{.column width="50%"}
+
+하위 10개 추출
+```{python}
+#| echo: false
+print(delay_time_bottom[['model','mean','count']])
+```
+
+:::
 
 ---
 
@@ -263,11 +281,20 @@ print(delay_time_bottom)
 
 ```{python}
 #|code-fold: true
-delay_time_top['manu_model'] = delay_time_top['manufacturer'].apply(lambda x: x[:3] + (x.split()[1][0] if len(x.split()) > 1 else '')) + "/" + delay_time_top['model']
-delay_time_bottom['manu_model'] = delay_time_bottom['manufacturer'].apply(lambda x: x[:3] + (x.split()[1][0] if len(x.split()) > 1 else '')) + "/" + delay_time_bottom['model']
-print(delay_time_top)
-print(delay_time_bottom)
+delay_time_top['manu_model'] = ( delay_time_top['manufacturer'].str[:3] +  delay_time_top['manufacturer'].str.split().str[1].str[0].fillna(''))+ "/" + delay_time_top['model']
+
+delay_time_bottom['manu_model'] = ( delay_time_bottom['manufacturer'].str[:3] +  delay_time_bottom['manufacturer'].str.split().str[1].str[0].fillna(''))+ "/" + delay_time_bottom['model']
+
+
 ```
+
+
+
+```{python}
+#| echo: false
+print(delay_time_top[['manufacturer','model','manu_model']])
+```
+
 
 
 ---
@@ -322,5 +349,28 @@ plt.xticks(rotation=40,fontsize=16, fontweight='bold');
 
 ### 피해야 할 비행기
 
-![BOE](img\boe717.jpg){style="position: absolute; bottom: 50px; right: 50px; width: 50%; height: 60%;"}
-![EMB](img\erj145_kp.jpg){width=60%}
+
+
+::: {.column width="50%"}
+
+<h3 style="font-size: 30px;">ERJ 145</h3>
+![](img\erj145_kp.jpg)
+
+:::
+
+
+::: {.column width="50%"}
+
+<h3 style="font-size: 30px;">BOE 717</h3>
+![](img\boe717.jpg)
+
+:::
+
+
+::: {.column width="50%"}
+
+<h3 style="font-size: 30px;">CL-600-2B19</h3>
+![](img\CL-600-2B19.jpg)
+
+:::
+
