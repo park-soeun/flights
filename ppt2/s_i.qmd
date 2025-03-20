@@ -16,17 +16,18 @@ format:
 ## 1. 분석 개요
 - 항공편 지연은 항공사, 공항 운영, 승객에게 큰 영향을 미치는 중요한 요소
 - 지연을 유발하는 다양한 요인(탑승률, 항공기 모델, 노선 등)에 대한 분석 필요
-- 분석 목표:
-    - 탑승률과 지연의 관계 분석
-    - 제조사별 기체 성능과 지연 패턴 분석
-    - 특정 노선별 지연 발생 패턴 분석
+
+### 분석 목표:
+- 탑승률과 지연의 관계 분석
+- 제조사별 기체 성능과 지연 패턴 분석
+- 특정 노선별 지연 발생 패턴 분석
 
 
 ---
 
 ## 2. 사용 데이터
-- 사용 데이터 개요 및 주요 컬럼 정리
-- 주요 데이터 셋
+
+<br>
 
 | 데이터셋       | 설명                                       |
 |---------------|-------------------------------------------|
@@ -52,52 +53,49 @@ pass_df = pd.read_csv('../ppt/data/t100.csv')
 
 ## 3. 공통 데이터 전처리
 
-- 데이터 병합 및 컬럼 처리
-    - `flights.csv`와 `planes.csv`를 `tailnum` 기준으로 병합
+1. `flights.csv`와 `planes.csv`를 `tailnum` 기준으로 병합
 ```{python}
-#| echo: true
 df = pd.merge(flights, plane_df, on='tailnum')
 ```
 
-<br>
 
-    - `datetime` 컬럼 생성 (`year`, `month`, `day`, `hour`, `minute`를 변환)
+2. `datetime` 컬럼 생성 (`year`, `month`, `day`, `hour`, `minute`를 변환)
+
 ```{python}
-#| echo: true
 df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour', 'minute']])
 ```
 
 
-<br>
+3. `airlines.csv`를 `carrier` 기준으로 병합하여 항공사명 추가
 
-    - `airlines.csv`를 `carrier` 기준으로 병합하여 항공사명 추가
 ```{python}
-#| echo: true
 df = df.merge(airlines, on="carrier", how="left")
 ```
 
 
-<br>
+4. `t100.csv`의 columns를 소문자로 변경
 
-    - `t100.csv`의 columns를 소문자로 변경
 ```{python}
 pass_df.columns = pass_df.columns.str.lower()
 ```
+
 
 ---
 
 ## 4. 분석
 
+<div id="subject_list">
 #### 4.1 탑승률과 항공편 지연 관계 분석
-#### 4.2 제조사별 엔진 Delay 시간 분석
+#### 4.2 제조사별 엔진 지연 시간 분석
 #### 4.3 정훈님 주제
+</div>
 
 ---
 
 ### 4.1 탑승률과 항공편 지연 관계 분석
 
 - 만석에 가까울수록 탑승 절차, 수하물 처리 등이 길어져 지연될 가능성이 있음
--> 탑승률이 높을수록 항공편 출발 지연이 증가하는가?
+##### -> 탑승률이 높을수록 항공편 출발 지연이 증가하는가?
 
 ---
 
@@ -307,4 +305,4 @@ plt.show()
 
 
 - 반대로 신뢰성이 높은 기종 Top3는 '**BOE**'사의 '**757-231**'기종, '**BOE**'사의 '**757-2Q8**' 기종, '**AIR**'사의 '**A321-211**'기종 이다.
-- 또한 제조사만 봤을때 
+- 또한 제조사만 봤을때 '**BOE**'사 **5대**, '**AIRBUS**'사 **2대**, '**AIR Industry**'사 **2대**로 신뢰성 높은  model을 만들어 내는것을 알 수 있다.
