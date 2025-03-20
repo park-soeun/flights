@@ -301,7 +301,6 @@ print(delay_time_top[['manufacturer','model','manu_model']])
 
 #### 분석 및 시각화 
 
-#### 지연 심한 항공사/기종
 
 ```{python}
 #| code-fold: true
@@ -318,7 +317,6 @@ plt.xticks(rotation=40,fontsize=16, fontweight='bold');
 
 #### 분석 및 시각화 
 
-#### 지연 심한 항공사/기종
 
 ```{python}
 #| code-fold: true
@@ -354,7 +352,7 @@ plt.xticks(rotation=40,fontsize=16, fontweight='bold');
 ::: {.column width="50%"}
 
 <h3 style="font-size: 30px;">ERJ 145</h3>
-![](img\erj145_kp.jpg)
+![](img\erj145_kp.jpg){width=60% height=50%}
 
 :::
 
@@ -362,7 +360,7 @@ plt.xticks(rotation=40,fontsize=16, fontweight='bold');
 ::: {.column width="50%"}
 
 <h3 style="font-size: 30px;">BOE 717</h3>
-![](img\boe717.jpg)
+![](img\boe717.jpg){width=60% height=50%}
 
 :::
 
@@ -370,7 +368,7 @@ plt.xticks(rotation=40,fontsize=16, fontweight='bold');
 ::: {.column width="50%"}
 
 <h3 style="font-size: 30px;">CL-600-2B19</h3>
-![](img\CL-600-2B19.jpg)
+![](img\CL-600-2B19.jpg){width=60% height=50%}
 
 :::
 
