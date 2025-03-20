@@ -436,8 +436,8 @@ plt.ylabel('Average Delay')
 
 # 그래프 출력
 plt.show()
-
 ```
+
 
 
 ---
@@ -445,37 +445,10 @@ plt.show()
 ### 제조사로 산점도를 찍었을때
 
 
-- 색깔은 제조사, 모양은 비행기 레이블
-- 좋은 제조사: MACDONNELL DOUGLAS, AIRBUS INDUSTRIE
-- 나쁜 제조사 BOMBARDIER INC,EMBRAER
-- <span style="color:red;">but 명확하게 나눠지는 기준이 X</span>
-
-
 ```{python}
 #| code-fold: true
 
 sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='manufacturer', style='flight_type', palette='tab10',s=100)
-
-plt.legend(title='Manufacturer', bbox_to_anchor=(1.05, 0.5),loc='center left')
-# 그래프 제목과 레이블
-plt.title('Scatterplot: year vs Average Delay')
-plt.xlabel('Year')
-plt.ylabel('Average Delay')
-plt.show()
-```
-
----
-
-### 시트갯수로 산점도를 찍었을때
-
-- 어느정도 영향은 있다.
-- 시트가 많을수록, 딜레이가 짧다.
-- 시트가 적을수록, 딜레이가 길다.
-- <span style="color:red;">but 명확하게 나눠지는 기준이 X</span>
-
-```{python}
-#| code-fold: true
-sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='seats', style='flight_type', palette='tab20',s=100)
 
 plt.legend(title='Manufacturer', bbox_to_anchor=(1.05, 0.5),loc='center left')
 # 그래프 제목과 레이블
@@ -493,6 +466,11 @@ plt.show()
 
 - 18개의 모델별로 명확히 나누어진다.
 - 앞서 언급한 좋은 제조사 곳은 AIRBUS INDUSTRIE 모델을 2가지 사용
+- 결론: 제조사의 영향보다는 모델의 영향으로 딜레이 시간 결정됨.
+
+
+<span style="color:red;">앞선 결과와 일치</span>
+
 
 ```{python}
 #| code-fold: true
@@ -506,12 +484,3 @@ plt.ylabel('Average Delay')
 
 plt.show()
 ```
-
----
-
-### 결론
-- 제조사의 영향보다는 모델의 영향으로 딜레이 시간 결정됨.
-
-
-<span style="color:red;">앞선 결과와 일치</span>
-

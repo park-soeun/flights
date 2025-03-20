@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="test_files/libs/clipboard/clipboard.min.js"></script>
+<script src="test_files/libs/quarto-html/tabby.min.js"></script>
+<script src="test_files/libs/quarto-html/popper.min.js"></script>
+<script src="test_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="test_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="test_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="test_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.42">
+
+  <title>.</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="test_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="test_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="test_files/libs/revealjs/dist/theme/quarto-8f3eebe07241f08526c91a7e9cbef8fd.css">
+  <link rel="stylesheet" href="styles.css">
+  <link href="test_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="test_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="test_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="test_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+  
+  <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="logo.PNG" data-background-size="cover" class="quarto-title-block center">
+  <h1 class="title">.</h1>
+
+<div class="quarto-title-authors">
+</div>
+
+</section>
+<section id="분석-개요" class="slide level2">
+<h2>1. 분석 개요</h2>
+<ul>
+<li>항공편 지연은 항공사, 공항 운영, 승객에게 큰 영향을 미치는 중요한 요소</li>
+<li>지연을 유발하는 다양한 요인(탑승률, 항공기 모델, 노선 등)에 대한 분석 필요</li>
+</ul>
+</section>
+<section id="사용-데이터" class="slide level2">
+<h2>2. 사용 데이터</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 22%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>데이터셋</th>
+<th>데이터 출처</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>flights.csv</code></td>
+<td>내부 데이터</td>
+<td>항공편 정보 (출발지, 도착지, 지연 시간 등)</td>
+</tr>
+<tr class="even">
+<td><code>planes.csv</code></td>
+<td>내부 데이터</td>
+<td>항공기 정보 (제조 연도, 모델 등)</td>
+</tr>
+<tr class="odd">
+<td><code>airlines.csv</code></td>
+<td>내부 데이터</td>
+<td>항공사 코드 및 항공사명 정보</td>
+</tr>
+<tr class="even">
+<td><code>t100.csv</code></td>
+<td>외부 데이터</td>
+<td>미국 국내선 항공사의 운항 실적 (항공편 수, 좌석 수, 승객 수, 운항 거리 등) 제공</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="공통-데이터-전처리" class="slide level2">
+<h2>3. 공통 데이터 전처리</h2>
+<ol type="1">
+<li><code>flights.csv</code>와 <code>planes.csv</code>를 <code>tailnum</code> 기준으로 병합</li>
+<li><code>datetime</code> 컬럼 생성 (<code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>를 변환)</li>
+<li><code>airlines.csv</code>를 <code>carrier</code> 기준으로 병합하여 항공사명 추가</li>
+</ol>
+<div id="2a269712" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a>df <span class="op">=</span> pd.merge(flights, plane_df, on<span class="op">=</span><span class="st">'tailnum'</span>)</span>
+<span id="cb1-2"><a href=""></a>df[<span class="st">'datetime'</span>] <span class="op">=</span> pd.to_datetime(df[[<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'day'</span>, <span class="st">'hour'</span>, <span class="st">'minute'</span>]])</span>
+<span id="cb1-3"><a href=""></a>df <span class="op">=</span> df.merge(airlines, on<span class="op">=</span><span class="st">"carrier"</span>, how<span class="op">=</span><span class="st">"left"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="6d813292" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 284170 entries, 0 to 284169
+Data columns (total 29 columns):
+ #   Column          Non-Null Count   Dtype         
+---  ------          --------------   -----         
+ 0   year            284170 non-null  int64         
+ 1   month           284170 non-null  int64         
+ 2   day             284170 non-null  int64         
+ 3   dep_time        279971 non-null  float64       
+ 4   sched_dep_time  284170 non-null  int64         
+ 5   dep_delay       279971 non-null  float64       
+ 6   arr_time        279619 non-null  float64       
+ 7   sched_arr_time  284170 non-null  int64         
+ 8   arr_delay       279017 non-null  float64       
+ 9   carrier         284170 non-null  object        
+ 10  flight          284170 non-null  int64         
+ 11  tailnum         284170 non-null  object        
+ 12  origin          284170 non-null  object        
+ 13  dest            284170 non-null  object        
+ 14  air_time        279017 non-null  float64       
+ 15  distance        284170 non-null  int64         
+ 16  hour            284170 non-null  int64         
+ 17  minute          284170 non-null  int64         
+ 18  time_hour       284170 non-null  object        
+ 19  manuf_year      278864 non-null  float64       
+ 20  type            284170 non-null  object        
+ 21  manufacturer    284170 non-null  object        
+ 22  model           284170 non-null  object        
+ 23  engines         284170 non-null  int64         
+ 24  seats           284170 non-null  int64         
+ 25  speed           963 non-null     float64       
+ 26  engine          284170 non-null  object        
+ 27  datetime        284170 non-null  datetime64[ns]
+ 28  name            284170 non-null  object        
+dtypes: datetime64[ns](1), float64(7), int64(11), object(10)
+memory usage: 62.9+ MB
+None</code></pre>
+</div>
+</div>
+</section>
+<section id="분석" class="slide level2">
+<h2>4. 분석</h2>
+<div id="subject_list">
+<h4 id="탑승률과-항공편-지연-관계-분석">4.1 탑승률과 항공편 지연 관계 분석</h4>
+<h4 id="제조사별-엔진-지연-시간-분석">4.2 제조사별 엔진 지연 시간 분석</h4>
+<h4 id="제조사별-엔진-지연-시간-원인-도출">4.3 제조사별 엔진 지연 시간 원인 도출</h4>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="탑승률과-항공편-지연-관계-분석-1">4.1 탑승률과 항공편 지연 관계 분석</h3>
+<ul>
+<li>항공편 지연은 승객과 항공사 운영에 큰 영향을 미침</li>
+<li>지연이 발생하는 원인은 여러 가지지만, <strong>탑승률(Load Factor)과의 관계를 분석</strong></li>
+<li><strong>탑승률이 높아질수록 실제로 항공편이 더 지연되는지 확인</strong></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<div class="section-title">
+4.1 탑승률과 항공편 지연 관계
+</div>
+<h4 id="추가-데이터-전처리">추가 데이터 전처리</h4>
+<p><strong>탑승률을 계산하기 위해 필요한 전처리 과정</strong></p>
+<div class="num">
+<p>1️⃣ <code>t100.csv</code>(외부 데이터)에서 기존 <code>flights.csv</code>에 있는 <strong>출발지(origin), 목적지(dest), 항공사(carrier)</strong>만 필터링</p>
+<div id="0c54926d" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="co"># origin#| </span></span>
+<span id="cb3-2"><a href=""></a>ori_list <span class="op">=</span> df[<span class="st">'origin'</span>].unique()</span>
+<span id="cb3-3"><a href=""></a>pass_df <span class="op">=</span> pass_df[pass_df[<span class="st">'origin'</span>].isin(ori_list)]</span>
+<span id="cb3-4"><a href=""></a></span>
+<span id="cb3-5"><a href=""></a><span class="co"># dest</span></span>
+<span id="cb3-6"><a href=""></a>dest_list <span class="op">=</span> df[<span class="st">'dest'</span>].unique()</span>
+<span id="cb3-7"><a href=""></a>pass_df <span class="op">=</span> pass_df[pass_df[<span class="st">'dest'</span>].isin(dest_list)]</span>
+<span id="cb3-8"><a href=""></a></span>
+<span id="cb3-9"><a href=""></a><span class="co"># carrier</span></span>
+<span id="cb3-10"><a href=""></a>carrier_list <span class="op">=</span> df[<span class="st">'carrier'</span>].unique()</span>
+<span id="cb3-11"><a href=""></a>pass_df <span class="op">=</span> pass_df[pass_df[<span class="st">'carrier'</span>].isin(carrier_list)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>2️⃣ 탑승률 계산을 위해 연, 월, 항공사, 출발지, 도착지 기준으로 <code>seats</code>(좌석 수)와 <code>passengers</code>(승객 수)를 합산</p>
+<div id="c106f70b" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a>pass_grouped <span class="op">=</span> pass_df.groupby([<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'carrier'</span>, <span class="st">'origin'</span>, <span class="st">'dest'</span>])[[<span class="st">'seats'</span>, <span class="st">'passengers'</span>]].<span class="bu">sum</span>().reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>3️⃣ 기존 항공편 데이터(<code>flights.csv</code>)와 그룹화 기준을 맞춰 <code>flight_count</code>, <code>avg_dep_delay</code>, <code>avg_arr_delay</code> 계산</p>
+<div id="7290a295" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a>flight_grouped <span class="op">=</span> df.groupby([<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'carrier'</span>, <span class="st">'origin'</span>, <span class="st">'dest'</span>]).agg(</span>
+<span id="cb5-2"><a href=""></a>    flight_count<span class="op">=</span>(<span class="st">'flight'</span>, <span class="st">'count'</span>),</span>
+<span id="cb5-3"><a href=""></a>    avg_dep_delay<span class="op">=</span>(<span class="st">'dep_delay'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb5-4"><a href=""></a>    avg_arr_delay<span class="op">=</span>(<span class="st">'arr_delay'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb5-5"><a href=""></a>    total_distance<span class="op">=</span>(<span class="st">'distance'</span>, <span class="st">'sum'</span>)</span>
+<span id="cb5-6"><a href=""></a>    ).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>4️⃣ 두 데이터를 병합하여 <code>load_factor = passengers / seats</code> 계산</p>
+<div id="4c684d99" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a>merged_df <span class="op">=</span> flight_grouped.merge(</span>
+<span id="cb6-2"><a href=""></a>    pass_grouped,</span>
+<span id="cb6-3"><a href=""></a>    on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'carrier'</span>, <span class="st">'origin'</span>, <span class="st">'dest'</span>],</span>
+<span id="cb6-4"><a href=""></a>)</span>
+<span id="cb6-5"><a href=""></a></span>
+<span id="cb6-6"><a href=""></a>merged_df[<span class="st">'load_factor'</span>] <span class="op">=</span> merged_df[<span class="st">'passengers'</span>] <span class="op">/</span> merged_df[<span class="st">'seats'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>5️⃣ 이상치 제거(IQR 방식)</p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="section-title">
+4.1 탑승률과 항공편 지연 관계
+</div>
+<h4 id="분석-및-시각화">분석 및 시각화</h4>
+<div id="120645cc" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a>cleaned_df[<span class="st">"load_factor_bin"</span>] <span class="op">=</span> pd.cut(cleaned_df[<span class="st">"load_factor"</span>], bins<span class="op">=</span>[<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>, <span class="dv">1</span>], labels<span class="op">=</span>[<span class="st">"0-30%"</span>, <span class="st">"30-50%"</span>, <span class="st">"50-70%"</span>, <span class="st">"70-90%"</span>, <span class="st">"90-100%"</span>])</span>
+<span id="cb7-2"><a href=""></a>summary_stats <span class="op">=</span> cleaned_df.groupby(<span class="st">"load_factor_bin"</span>)[[<span class="st">"avg_dep_delay"</span>, <span class="st">"avg_arr_delay"</span>]].mean().reset_index()</span>
+<span id="cb7-3"><a href=""></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb7-4"><a href=""></a>sns.barplot(data<span class="op">=</span>summary_stats, x<span class="op">=</span><span class="st">"load_factor_bin"</span>, y<span class="op">=</span><span class="st">"avg_dep_delay"</span>, palette<span class="op">=</span><span class="st">"Reds"</span>)</span>
+<span id="cb7-5"><a href=""></a></span>
+<span id="cb7-6"><a href=""></a></span>
+<span id="cb7-7"><a href=""></a>plt.xlabel(<span class="st">"Load Factor Range"</span>)</span>
+<span id="cb7-8"><a href=""></a>plt.ylabel(<span class="st">"Average Departure Delay (minutes)"</span>)</span>
+<span id="cb7-9"><a href=""></a>plt.title(<span class="st">"Average Departure Delay by Load Factor"</span>)</span>
+<span id="cb7-10"><a href=""></a>plt.grid(axis<span class="op">=</span><span class="st">"y"</span>)</span>
+<span id="cb7-11"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="test_files/figure-revealjs/cell-10-output-1.png" width="957" height="376"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>탑승률이 0~30% 구간에서는 평균 출발 지연 시간이 5.6분으로 가장 낮음</li>
+<li>탑승률이 30~50% 구간에서는 평균 출발 지연 시간이 8분으로 증가</li>
+<li>탑승률이 50~70% 구간에서는 평균 출발 지연 시간이 11.6분으로 상승</li>
+<li>탑승률이 70~90% 구간에서는 평균 출발 지연 시간이 12.7분으로 증가</li>
+<li>탑승률이 90~100% 구간에서는 평균 출발 지연 시간이 14.2분으로 가장 길어짐</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<div class="section-title">
+4.1 탑승률과 항공편 지연 관계
+</div>
+<h4 id="결과">결과</h4>
+<div class="num">
+<p>✅ <strong>탑승률</strong>에 따라서 출발 지연 시간이 꾸준히 <strong>증가</strong>하는 패턴 확인</p>
+<p>✅ <strong>만석에 가까울수록</strong> 지연 시간이 긴 이유는 <strong>보딩</strong> 및 <strong>공항 운영상</strong>의 복합적인 요소 때문일 가능성이 큼</p>
+<p>✅ 탑승률과 출발 지연 사이에 <strong>상관관계가 존재</strong>하며, 추가적인 공항 운영 요인 분석이 필요함</p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="제조사별-엔진-delay-시간-분석">4.2 제조사별 엔진 Delay 시간 분석</h3>
+<ul>
+<li>최근 화두가 되는 비행기 엔진문제</li>
+<li>그 중 ’보잉’사의 엔진 문제가 많은 이야깃거리</li>
+<li>항공기 제조사중 가장 지연이 가장 많은 제조사와 그 기종은?</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h4 id="제조사들의-결함-문제">제조사들의 결함 문제</h4>
+<p><img data-src="img\EMB.png" style="position: absolute; width: 80%; height: 90%;"> <img data-src="img\BOE.png" style="position: absolute; bottom: 50px; right: 50px; width: 50%; height: 60%;"></p>
+</section>
+<section class="slide level2">
+
+<div class="section-title">
+4.1 탑승률과 항공편 지연 관계
+</div>
+<h4 id="추가-데이터-전처리-1">추가 데이터 전처리</h4>
+<ul>
+<li>도착 지연시간과 출발 지연시간을 더하여 새로운 column 생성</li>
+</ul>
+<div id="56231f13" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a>df[<span class="st">'delay_time'</span>] <span class="op">=</span> df[<span class="st">'arr_delay'</span>] <span class="op">+</span> df[<span class="st">'dep_delay'</span>]</span>
+<span id="cb8-2"><a href=""></a><span class="bu">print</span>(df[<span class="st">'delay_time'</span>].head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0    13.0
+1    24.0
+2    35.0
+3   -19.0
+4   -31.0
+Name: delay_time, dtype: float64</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<ul>
+<li>제조사별 모델을 그룹화하여 delay 평균과 비행 횟수를 구함</li>
+</ul>
+<div id="cce630fa" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href=""></a>df_air_time <span class="op">=</span> (</span>
+<span id="cb10-2"><a href=""></a>    df.groupby([<span class="st">'manufacturer'</span>, <span class="st">'model'</span>])[<span class="st">"delay_time"</span>]</span>
+<span id="cb10-3"><a href=""></a>    .agg([<span class="st">'mean'</span>, <span class="st">'count'</span>]).sort_values(<span class="st">'mean'</span>, ascending<span class="op">=</span><span class="va">False</span>)  </span>
+<span id="cb10-4"><a href=""></a>).reset_index()</span>
+<span id="cb10-5"><a href=""></a>df_air_time.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">manufacturer</th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>AIRBUS INDUSTRIE</td>
+<td>A330-223</td>
+<td>452.00</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>BOEING</td>
+<td>747-451</td>
+<td>252.00</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>BOEING</td>
+<td>757-351</td>
+<td>155.25</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>BOEING</td>
+<td>777-224</td>
+<td>91.00</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>GULFSTREAM AEROSPACE</td>
+<td>G-IV</td>
+<td>87.50</td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<ul>
+<li>운항 횟수가 1000회 미만인 데이터를 제거하여 신뢰성 있는 데이터만 유지 (147개 -&gt; 38개)</li>
+<li>출발 지연시간이 가장 긴 상위 10개 및 가장 짧은 하위 10개 기종 추출</li>
+<li>.nlargest(), nsmallest() 를 사용해서 상,하위 10개의 ’mean’열 데이터 추출</li>
+</ul>
+<div id="000b7075" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href=""></a>df_air_time <span class="op">=</span> df_air_time.drop(df_air_time[df_air_time[<span class="st">'count'</span>]<span class="op">&lt;</span><span class="dv">1000</span>].index)</span>
+<span id="cb11-2"><a href=""></a>df_air_time.shape   <span class="co"># 기존 147개 데이터에서 38개의 데이터로 축소</span></span>
+<span id="cb11-3"><a href=""></a></span>
+<span id="cb11-4"><a href=""></a>delay_time_top <span class="op">=</span> df_air_time.nlargest(<span class="dv">10</span>, <span class="st">'mean'</span>)</span>
+<span id="cb11-5"><a href=""></a>delay_time_bottom <span class="op">=</span> df_air_time.nsmallest(<span class="dv">10</span>, <span class="st">'mean'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="column" style="width:50%;">
+<p>상위 10개 추출</p>
+<div id="737fa0cc" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-stdout">
+<pre><code>          model       mean  count
+18    EMB-145LR  38.964306  26475
+22      717-200  35.852358   3075
+23  CL-600-2B19  34.992627   1492
+24    EMB-145XR  34.796349  13312
+37      737-7H4  28.022783  10227
+38  CL-600-2C10  27.439327   7903
+40  CL-600-2D24  26.665237  11656
+52  CL-600-2B19  21.422945   7871
+54     A320-232  20.840146  30972
+59        MD-88  19.028067   1247</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p>하위 10개 추출</p>
+<div id="d00ea70e" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-stdout">
+<pre><code>              model      mean  count
+128         757-231 -2.109045   2366
+122         757-2Q8 -0.293210   2268
+108        A321-211  5.255715   1181
+104  DC-9-82(MD-82)  6.566601   2545
+103         737-732  6.639552   1340
+102         737-832  7.598017   8672
+101        A319-114  7.683273   4938
+99         A319-112  8.519237   5822
+98         A319-114  8.647260   4672
+97          767-223  8.659091   4224</code></pre>
+</div>
+</div>
+</div></section>
+<section class="slide level2">
+
+<ul>
+<li>그래프에서 제조사와 모델을 직관적으로 표시하기 위해 새로운 열 manu_model 생성</li>
+<li>제조사 이름의 앞 3글자 + 두 번째 단어의 첫 글자 + 모델명을 조합하여 가독성을 높임</li>
+</ul>
+<div id="1d9b4c33" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href=""></a>delay_time_top[<span class="st">'manu_model'</span>] <span class="op">=</span> ( delay_time_top[<span class="st">'manufacturer'</span>].<span class="bu">str</span>[:<span class="dv">3</span>] <span class="op">+</span>  delay_time_top[<span class="st">'manufacturer'</span>].<span class="bu">str</span>.split().<span class="bu">str</span>[<span class="dv">1</span>].<span class="bu">str</span>[<span class="dv">0</span>].fillna(<span class="st">''</span>))<span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> delay_time_top[<span class="st">'model'</span>]</span>
+<span id="cb14-2"><a href=""></a></span>
+<span id="cb14-3"><a href=""></a>delay_time_bottom[<span class="st">'manu_model'</span>] <span class="op">=</span> ( delay_time_bottom[<span class="st">'manufacturer'</span>].<span class="bu">str</span>[:<span class="dv">3</span>] <span class="op">+</span>  delay_time_bottom[<span class="st">'manufacturer'</span>].<span class="bu">str</span>.split().<span class="bu">str</span>[<span class="dv">1</span>].<span class="bu">str</span>[<span class="dv">0</span>].fillna(<span class="st">''</span>))<span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> delay_time_bottom[<span class="st">'model'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="ba31e49e" class="cell" data-execution_count="16">
+<div class="cell-output cell-output-stdout">
+<pre><code>                     manufacturer        model        manu_model
+18                        EMBRAER    EMB-145LR     EMB/EMB-145LR
+22                         BOEING      717-200       BOE/717-200
+23                       CANADAIR  CL-600-2B19   CAN/CL-600-2B19
+24                        EMBRAER    EMB-145XR     EMB/EMB-145XR
+37                         BOEING      737-7H4       BOE/737-7H4
+38                 BOMBARDIER INC  CL-600-2C10  BOMI/CL-600-2C10
+40                 BOMBARDIER INC  CL-600-2D24  BOMI/CL-600-2D24
+52                 BOMBARDIER INC  CL-600-2B19  BOMI/CL-600-2B19
+54                         AIRBUS     A320-232      AIR/A320-232
+59  MCDONNELL DOUGLAS CORPORATION        MD-88        MCDD/MD-88</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h4 id="분석-및-시각화-1">분석 및 시각화</h4>
+<div id="ebc0f361" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href=""></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">14</span>,<span class="dv">5</span>))</span>
+<span id="cb16-2"><a href=""></a>sns.barplot(x<span class="op">=</span>delay_time_top[<span class="st">'manu_model'</span>],y<span class="op">=</span>delay_time_top[<span class="st">'mean'</span>], palette<span class="op">=</span><span class="st">"Reds_r"</span>)</span>
+<span id="cb16-3"><a href=""></a>plt.ylim(<span class="dv">0</span>, <span class="dv">50</span>)</span>
+<span id="cb16-4"><a href=""></a>plt.xlabel(<span class="st">"model by manufacturer"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb16-5"><a href=""></a>plt.ylabel(<span class="st">"delay time_mean"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb16-6"><a href=""></a>plt.title(<span class="st">"Bad flights"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb16-7"><a href=""></a>plt.xticks(rotation<span class="op">=</span><span class="dv">40</span>,fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="test_files/figure-revealjs/cell-18-output-1.png" width="1135" height="619"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h4 id="분석-및-시각화-2">분석 및 시각화</h4>
+<div id="434f2f8c" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href=""></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">14</span>,<span class="dv">5</span>))</span>
+<span id="cb17-2"><a href=""></a>sns.barplot(x<span class="op">=</span>delay_time_bottom[<span class="st">'manu_model'</span>],y<span class="op">=</span>delay_time_bottom[<span class="st">'mean'</span>], palette<span class="op">=</span><span class="st">"Blues_r"</span>)</span>
+<span id="cb17-3"><a href=""></a>plt.ylim(<span class="op">-</span><span class="dv">5</span>, <span class="dv">50</span>)</span>
+<span id="cb17-4"><a href=""></a>plt.xlabel(<span class="st">"model by manufacturer"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb17-5"><a href=""></a>plt.ylabel(<span class="st">"delay time_mean"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb17-6"><a href=""></a>plt.title(<span class="st">"Good flights"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb17-7"><a href=""></a>plt.xticks(rotation<span class="op">=</span><span class="dv">40</span>,fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="test_files/figure-revealjs/cell-19-output-1.png" width="1133" height="650"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h4 id="결론">결론</h4>
+<ul>
+<li>가장 신뢰성이 떨어지는 기종 Top3는 ‘<strong>EMB</strong>’사의’<strong>EMB-145LR</strong>’기종, ‘<strong>BOE</strong>’사의’<strong>717-200</strong>’기종 , ‘<strong>CAN</strong>’사의’<strong>CL-600-2B19</strong>’기종이다</li>
+<li>또한 제조사만 봤을때 ‘<strong>BOMI</strong>’사 <strong>4대</strong>,’<strong>EMB</strong>’사 <strong>2대</strong> , ’<strong>BOE</strong>’사 <strong>2대</strong>가 나타나여 이 제조사들의 model이 지연이 잘되는 걸 알 수 있다.</li>
+<li>EMB는 엠브라에르, BOE는 보잉, CAN은 케나다에어</li>
+</ul>
+<p><br></p>
+<ul>
+<li>반대로 신뢰성이 높은 기종 Top3는 ‘<strong>BOE</strong>’사의’<strong>757-231</strong>’기종, ‘<strong>BOE</strong>’사의’<strong>757-2Q8</strong>’ 기종, ‘<strong>AIR</strong>’사의’<strong>A321-211</strong>’기종 이다.</li>
+<li>또한 제조사만 봤을때 ‘<strong>BOE</strong>’사 <strong>5대</strong>,’<strong>AIRBUS</strong>’사 <strong>2대</strong>, ’<strong>AIR Industry</strong>’사 <strong>2대</strong>로 신뢰성 높은 model을 만들어 내는것을 알 수 있다.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="피해야-할-비행기">피해야 할 비행기</h3>
+<div class="plane_images">
+<div class="plane_image">
+<h3 style="font-size: 30px;">
+ERJ 145
+</h3>
+<p><img data-src="img\erj145_kp.jpg"></p>
+</div>
+<div class="plane_image">
+<h3 style="font-size: 30px;">
+BOE 717
+</h3>
+<p><img data-src="img\boe717.jpg"></p>
+</div>
+<div class="plane_image">
+<h3 style="font-size: 30px;">
+CL-600-2B19
+</h3>
+<p><img data-src="img\CL-600-2B19.jpg"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h4 id="제조사별-엔진-지연-시간-원인-도출-1">4.3 제조사별 엔진 지연 시간 원인 도출</h4>
+<ul>
+<li>앞선 결과에서 더 자세한 원인을 분석하고자함</li>
+<li>예상 원인: 제조 연식,비행기 모델,엔진 수,항공사,공항,시트 수</li>
+</ul>
+<div class="column" style="width:50%;">
+<p>추가 전처리</p>
+</div><div id="0c28312f" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href=""></a>delay_time_top[<span class="st">"flight_type"</span>] <span class="op">=</span> <span class="st">"bad flight"</span></span>
+<span id="cb18-2"><a href=""></a>delay_time_bottom[<span class="st">"flight_type"</span>] <span class="op">=</span> <span class="st">"good flight"</span></span>
+<span id="cb18-3"><a href=""></a>concat_data <span class="op">=</span> pd.concat([delay_time_top, delay_time_bottom], axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb18-4"><a href=""></a>df <span class="op">=</span> pd.merge(concat_data,df, on<span class="op">=</span>[<span class="st">'manufacturer'</span>,<span class="st">'model'</span>])</span>
+<span id="cb18-5"><a href=""></a></span>
+<span id="cb18-6"><a href=""></a>delay_time_bottom.head(<span class="dv">2</span>)</span>
+<span id="cb18-7"><a href=""></a>concat_data.columns</span>
+<span id="cb18-8"><a href=""></a>df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 156426 entries, 0 to 156425
+Data columns (total 34 columns):
+ #   Column          Non-Null Count   Dtype         
+---  ------          --------------   -----         
+ 0   manufacturer    156426 non-null  object        
+ 1   model           156426 non-null  object        
+ 2   mean            156426 non-null  float64       
+ 3   count           156426 non-null  int64         
+ 4   manu_model      156426 non-null  object        
+ 5   flight_type     156426 non-null  object        
+ 6   year            156426 non-null  int64         
+ 7   month           156426 non-null  int64         
+ 8   day             156426 non-null  int64         
+ 9   dep_time        152861 non-null  float64       
+ 10  sched_dep_time  156426 non-null  int64         
+ 11  dep_delay       152861 non-null  float64       
+ 12  arr_time        152617 non-null  float64       
+ 13  sched_arr_time  156426 non-null  int64         
+ 14  arr_delay       152258 non-null  float64       
+ 15  carrier         156426 non-null  object        
+ 16  flight          156426 non-null  int64         
+ 17  tailnum         156426 non-null  object        
+ 18  origin          156426 non-null  object        
+ 19  dest            156426 non-null  object        
+ 20  air_time        152258 non-null  float64       
+ 21  distance        156426 non-null  int64         
+ 22  hour            156426 non-null  int64         
+ 23  minute          156426 non-null  int64         
+ 24  time_hour       156426 non-null  object        
+ 25  manuf_year      153505 non-null  float64       
+ 26  type            156426 non-null  object        
+ 27  engines         156426 non-null  int64         
+ 28  seats           156426 non-null  int64         
+ 29  speed           0 non-null       float64       
+ 30  engine          156426 non-null  object        
+ 31  datetime        156426 non-null  datetime64[ns]
+ 32  name            156426 non-null  object        
+ 33  delay_time      152258 non-null  float64       
+dtypes: datetime64[ns](1), float64(9), int64(12), object(12)
+memory usage: 40.6+ MB</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="전처리-이후-데이터-셋">전처리 이후 데이터 셋</h3>
+<div id="4316c7c6" class="cell" data-execution_count="20">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href=""></a>count_avg <span class="op">=</span> df.groupby([<span class="st">'model'</span>,<span class="st">'seats'</span>,<span class="st">'manufacturer'</span>,<span class="st">'manu_model'</span>,<span class="st">'flight_type'</span>,<span class="st">'manuf_year'</span>]).agg({<span class="st">'delay_time'</span>: <span class="st">'mean'</span>}).reset_index()</span>
+<span id="cb20-2"><a href=""></a>count_avg.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">seats</th>
+<th data-quarto-table-cell-role="th">manufacturer</th>
+<th data-quarto-table-cell-role="th">manu_model</th>
+<th data-quarto-table-cell-role="th">flight_type</th>
+<th data-quarto-table-cell-role="th">manuf_year</th>
+<th data-quarto-table-cell-role="th">delay_time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>717-200</td>
+<td>100</td>
+<td>BOEING</td>
+<td>BOE/717-200</td>
+<td>bad flight</td>
+<td>1999.0</td>
+<td>31.800000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>717-200</td>
+<td>100</td>
+<td>BOEING</td>
+<td>BOE/717-200</td>
+<td>bad flight</td>
+<td>2000.0</td>
+<td>33.143727</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="제조년식으로-산점도를-찍었을때">제조년식으로 산점도를 찍었을때</h3>
+<ul>
+<li>2000년도 기점으로 bad flight이 많아짐</li>
+</ul>
+<p><span style="color:red;">무엇이 원인일까?</span></p>
+<div id="5f0e7a82" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href=""></a>sns.scatterplot(data<span class="op">=</span>count_avg, x<span class="op">=</span><span class="st">'manuf_year'</span>, y<span class="op">=</span><span class="st">'delay_time'</span>, hue<span class="op">=</span><span class="st">'flight_type'</span>, palette<span class="op">=</span><span class="st">'viridis'</span>)</span>
+<span id="cb21-2"><a href=""></a>plt.legend(title<span class="op">=</span><span class="st">'flight_type'</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="fl">0.5</span>), loc<span class="op">=</span><span class="st">'center left'</span>)</span>
+<span id="cb21-3"><a href=""></a></span>
+<span id="cb21-4"><a href=""></a><span class="co"># 그래프 제목과 레이블</span></span>
+<span id="cb21-5"><a href=""></a>plt.title(<span class="st">'Scatterplot: year vs Delay'</span>)</span>
+<span id="cb21-6"><a href=""></a>plt.xlabel(<span class="st">'Year'</span>)</span>
+<span id="cb21-7"><a href=""></a>plt.ylabel(<span class="st">'Average Delay'</span>)</span>
+<span id="cb21-8"><a href=""></a></span>
+<span id="cb21-9"><a href=""></a><span class="co"># 그래프 출력</span></span>
+<span id="cb21-10"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="test_files/figure-revealjs/cell-22-output-1.png" width="971" height="449"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="제조사로-산점도를-찍었을때">제조사로 산점도를 찍었을때</h3>
+<div id="85f8ebf2" class="cell" data-execution_count="22">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href=""></a>sns.scatterplot(data<span class="op">=</span>count_avg, x<span class="op">=</span><span class="st">'manuf_year'</span>, y<span class="op">=</span><span class="st">'delay_time'</span>, hue<span class="op">=</span><span class="st">'manufacturer'</span>, style<span class="op">=</span><span class="st">'flight_type'</span>, palette<span class="op">=</span><span class="st">'tab10'</span>,s<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb22-2"><a href=""></a></span>
+<span id="cb22-3"><a href=""></a>plt.legend(title<span class="op">=</span><span class="st">'Manufacturer'</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="fl">0.5</span>),loc<span class="op">=</span><span class="st">'center left'</span>)</span>
+<span id="cb22-4"><a href=""></a><span class="co"># 그래프 제목과 레이블</span></span>
+<span id="cb22-5"><a href=""></a>plt.title(<span class="st">'Scatterplot: year vs Average Delay'</span>)</span>
+<span id="cb22-6"><a href=""></a>plt.xlabel(<span class="st">'Year'</span>)</span>
+<span id="cb22-7"><a href=""></a>plt.ylabel(<span class="st">'Average Delay'</span>)</span>
+<span id="cb22-8"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="test_files/figure-revealjs/cell-23-output-1.png" width="1156" height="449"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="모델별로-산점도를-찍었을때">모델별로 산점도를 찍었을때</h3>
+<ul>
+<li>18개의 모델별로 명확히 나누어진다.</li>
+<li>앞서 언급한 좋은 제조사 곳은 AIRBUS INDUSTRIE 모델을 2가지 사용</li>
+<li>결론: 제조사의 영향보다는 모델의 영향으로 딜레이 시간 결정됨.</li>
+</ul>
+<p><span style="color:red;">앞선 결과와 일치</span></p>
+<div id="4dc22b0c" class="cell" data-execution_count="23">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href=""></a>palette <span class="op">=</span> sns.color_palette(<span class="st">"tab20"</span>, n_colors<span class="op">=</span><span class="dv">18</span>)</span>
+<span id="cb23-2"><a href=""></a>sns.scatterplot(data<span class="op">=</span>count_avg, x<span class="op">=</span><span class="st">'manuf_year'</span>, y<span class="op">=</span><span class="st">'delay_time'</span>, hue<span class="op">=</span><span class="st">'model'</span>,style<span class="op">=</span><span class="st">'flight_type'</span>,  palette<span class="op">=</span> palette,s<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb23-3"><a href=""></a><span class="co"># 그래프 제목과 레이블</span></span>
+<span id="cb23-4"><a href=""></a>plt.legend(title<span class="op">=</span><span class="st">'label'</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="fl">0.5</span>), loc<span class="op">=</span><span class="st">'center left'</span>)</span>
+<span id="cb23-5"><a href=""></a>plt.title(<span class="st">'Scatterplot: year vs Average Delay'</span>)</span>
+<span id="cb23-6"><a href=""></a>plt.xlabel(<span class="st">'Year'</span>)</span>
+<span id="cb23-7"><a href=""></a>plt.ylabel(<span class="st">'Average Delay'</span>)</span>
+<span id="cb23-8"><a href=""></a></span>
+<span id="cb23-9"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="test_files/figure-revealjs/cell-24-output-1.png" width="1008" height="476"></p>
+</figure>
+</div>
+</div>
+</div>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="logo3.png" class="slide-logo"></p>
+<div class="footer footer-default">
+<p>Team 6 | LS BigData School | 2025</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="test_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="test_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="test_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="test_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="test_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="test_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="test_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="test_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="test_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="test_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
