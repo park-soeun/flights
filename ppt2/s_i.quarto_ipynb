@@ -1,0 +1,686 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \".\"\n",
+        "title-slide-attributes:\n",
+        "    data-background-image: \"logo.PNG\"\n",
+        "    data-background-size: cover\n",
+        "format:\n",
+        "  revealjs:\n",
+        "    theme: simple  # 기본 테마(원하는 테마 변경 가능)\n",
+        "    css: styles.css\n",
+        "    slide-number: true  # 페이지 번호 표시\n",
+        "    footer: \"Team 6 | LS BigData School | 2025\"  # 푸터 설정\n",
+        "    logo: \"logo3.png\"  # 로고 삽입\n",
+        "    echo: true\n",
+        "---\n",
+        "\n",
+        "\n",
+        "## 1. 분석 개요\n",
+        "- 항공편 지연은 항공사, 공항 운영, 승객에게 큰 영향을 미치는 중요한 요소\n",
+        "- 지연을 유발하는 다양한 요인(탑승률, 항공기 모델, 노선 등)에 대한 분석 필요\n",
+        "\n",
+        "#### 분석 목표:\n",
+        "- 탑승률과 지연의 관계 분석\n",
+        "- 기체 제조사/모델별 지연 시간 분석\n",
+        "- 지연 원인에 대한 세부 원인 분석\n",
+        "\n",
+        "\n",
+        "---\n",
+        "\n",
+        "## 2. 사용 데이터\n",
+        "\n",
+        "| 데이터셋       | 데이터 출처     | 설명                                       |\n",
+        "|---------------|-----------------|-------------------------------------------|\n",
+        "| `flights.csv`  | 내부 데이터 | 항공편 정보 (출발지, 도착지, 지연 시간 등) |\n",
+        "| `planes.csv`   | 내부 데이터 | 항공기 정보 (제조 연도, 모델 등)           |\n",
+        "| `airlines.csv` | 내부 데이터 | 항공사 코드 및 항공사명 정보               |\n",
+        "| `t100.csv`     | 외부 데이터 | 미국 국내선 항공사의 운항 실적 (항공편 수, 좌석 수, 승객 수, 운항 거리 등) 제공 |\n"
+      ],
+      "id": "5b6b9b65"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "from nycflights13 import flights, planes, airlines\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import seaborn as sns\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "plane_df = planes.rename(columns={'year': 'manuf_year'})\n",
+        "df = pd.merge(flights, plane_df, on='tailnum')\n",
+        "pass_df = pd.read_csv('../ppt/data/t100.csv')"
+      ],
+      "id": "7cb9267a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "## 3. 공통 데이터 전처리\n",
+        "\n",
+        "\n",
+        "1. `flights.csv`와 `planes.csv`를 `tailnum` 기준으로 병합\n",
+        "2. `datetime` 컬럼 생성 (`year`, `month`, `day`, `hour`, `minute`를 변환)\n",
+        "3. `airlines.csv`를 `carrier` 기준으로 병합하여 항공사명 추가\n"
+      ],
+      "id": "7a6d59b3"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df = pd.merge(flights, plane_df, on='tailnum')\n",
+        "df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour', 'minute']])\n",
+        "df = df.merge(airlines, on=\"carrier\", how=\"left\")"
+      ],
+      "id": "51dd1702",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#|echo: false\n",
+        "pass_df.columns = pass_df.columns.str.lower()"
+      ],
+      "id": "7ff25402",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "## 4. 분석\n",
+        "\n",
+        "<div id=\"subject_list\">\n",
+        "#### 4.1 탑승률과 항공편 지연 관계 분석\n",
+        "#### 4.2 제조사별 엔진 지연 시간 분석\n",
+        "#### 4.3 제조사별 엔진 지연 시간 원인 도출\n",
+        "</div>\n",
+        "\n",
+        "---\n",
+        "\n",
+        "### 4.1 탑승률과 항공편 지연 관계 분석\n",
+        "\n",
+        "- **만석에 가까울수록** 탑승 절차, 수하물 처리 등이 길어져 **지연**될 가능성이 있음\n",
+        "\n",
+        "<div id='font-red'>\n",
+        " -> 탑승률이 높을수록 항공편 출발 지연이 증가하는가?\n",
+        "</div>\n",
+        "\n",
+        "---\n",
+        "\n",
+        "<div class=\"section-title\">4.1 탑승률과 항공편 지연 관계</div>\n",
+        "\n",
+        "#### 추가 데이터 전처리\n",
+        "\n",
+        "- `t100.csv`에서 `origin`, `dest`, `carrier`가 기존 `flights.csv`에 존재하는 항목들만 남김\n"
+      ],
+      "id": "9da996c0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: true\n",
+        "# origin\n",
+        "pass_df = pass_df[pass_df['origin'].isin(['EWR', 'LGA', 'JFK'])]\n",
+        "\n",
+        "# dest\n",
+        "dest_list = df['dest'].unique()\n",
+        "pass_df = pass_df[pass_df['dest'].isin(dest_list)]\n",
+        "\n",
+        "# carrier\n",
+        "carrier_list = df['carrier'].unique()\n",
+        "pass_df = pass_df[pass_df['carrier'].isin(carrier_list)]"
+      ],
+      "id": "9e467949",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "- `year`, `month`, `carrier`, `origin`, `dest` 기준으로 `seats`, `passenger` 합산\n"
+      ],
+      "id": "fec37d8c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "pass_grouped = pass_df.groupby(['year', 'month', 'carrier', 'origin', 'dest'])[['seats', 'passengers']].sum().reset_index()"
+      ],
+      "id": "57664276",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "- `flights.csv`를 년/월/항공사/출발지/목적지 를 기준으로 그룹화하여 `flight_count`, `avg_dep_delay` 등을 계산\n"
+      ],
+      "id": "bdb22841"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "flight_grouped = df.groupby(['year', 'month', 'carrier', 'origin', 'dest']).agg(\n",
+        "    flight_count=('flight', 'count'),\n",
+        "    avg_dep_delay=('dep_delay', 'mean'),\n",
+        "    avg_arr_delay=('arr_delay', 'mean'),\n",
+        "    total_distance=('distance', 'sum')\n",
+        "    ).reset_index()"
+      ],
+      "id": "f2d5e63a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "<br>\n",
+        "\n",
+        "- 최종적으로 두 데이터를 병합 후, 탑승률(`passengers`, `seats`) 계산 \n"
+      ],
+      "id": "d2208ff9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "merged_df = flight_grouped.merge(\n",
+        "    pass_grouped,\n",
+        "    on=['year', 'month', 'carrier', 'origin', 'dest'],\n",
+        ")\n",
+        "\n",
+        "merged_df['load_factor'] = merged_df['passengers'] / merged_df['seats']"
+      ],
+      "id": "97ef904f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "<br>\n",
+        "\n",
+        "- 이상치 제거(IQR 방식)\n"
+      ],
+      "id": "d6c0e72a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: true\n",
+        "#| code-fold: true\n",
+        "def remove_outliers(df, column):\n",
+        "    Q1 = df[column].quantile(0.25)  # 1사분위수 (Q1)\n",
+        "    Q3 = df[column].quantile(0.75)  # 3사분위수 (Q3)\n",
+        "    IQR = Q3 - Q1  # IQR 계산\n",
+        "    lower_bound = Q1 - 1.5 * IQR  # 이상치 하한\n",
+        "    upper_bound = Q3 + 1.5 * IQR  # 이상치 상한\n",
+        "    return df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]"
+      ],
+      "id": "f0f321f8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "cleaned_df = remove_outliers(merged_df, \"avg_dep_delay\")"
+      ],
+      "id": "6ac4843a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "\n",
+        "#### 분석 및 시각화 \n"
+      ],
+      "id": "cc245bdf"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "cleaned_df[\"load_factor_bin\"] = pd.cut(cleaned_df[\"load_factor\"], bins=[0, 0.3, 0.5, 0.7, 0.9, 1], labels=[\"0-30%\", \"30-50%\", \"50-70%\", \"70-90%\", \"90-100%\"])\n",
+        "summary_stats = cleaned_df.groupby(\"load_factor_bin\")[[\"avg_dep_delay\", \"avg_arr_delay\"]].mean().reset_index()\n",
+        "plt.figure(figsize=(10, 6))\n",
+        "sns.barplot(data=summary_stats, x=\"load_factor_bin\", y=\"avg_dep_delay\", color=\"blue\")\n",
+        "\n",
+        "plt.xlabel(\"Load Factor Range\")\n",
+        "plt.ylabel(\"Average Departure Delay (minutes)\")\n",
+        "plt.title(\"Average Departure Delay by Load Factor\")\n",
+        "plt.grid(axis=\"y\")\n",
+        "plt.show()"
+      ],
+      "id": "5cc24a6b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "#### 결과\n",
+        "\n",
+        "---\n",
+        "\n",
+        "### 4.2 제조사별 엔진 Delay 시간 분석\n",
+        "\n",
+        "- 최근 화두가 되는 비행기 엔진문제\n",
+        "- 그 중 '보잉'사의 엔진 문제가 많은 이야깃거리 \n",
+        "- 항공기 제조사중 가장 출발 지연이 가장 많은 제조사와 그 기종은?\n",
+        "\n",
+        "---\n",
+        "\n",
+        "#### 제조사들의 결함 문제\n",
+        "\n",
+        "![](img\\EMB.png){style=\"position: absolute; width: 80%; height: 90%;\"}\n",
+        "![](img\\BOE.png){style=\"position: absolute; bottom: 50px; right: 50px; width: 50%; height: 60%;\"}\n",
+        "\n",
+        "---\n",
+        "\n",
+        "<div class=\"section-title\">4.1 탑승률과 항공편 지연 관계</div>\n",
+        "\n",
+        "#### 추가 데이터 전처리\n",
+        "\n",
+        "- 도착 지연시간과 출발 지연시간을 더하여 새로운 column 생성"
+      ],
+      "id": "1521936a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df['delay_time'] = df['arr_delay'] + df['dep_delay']\n",
+        "print(df['delay_time'].head())"
+      ],
+      "id": "2d8f0ebc",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "\n",
+        "- 제조사별 모델을 그룹화하여 delay 평균과 비행 횟수를 구함"
+      ],
+      "id": "389d89be"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df_air_time = (\n",
+        "    df.groupby(['manufacturer', 'model'])[\"delay_time\"]\n",
+        "    .agg(['mean', 'count']).sort_values('mean', ascending=False)  \n",
+        ").reset_index()\n",
+        "df_air_time.head()"
+      ],
+      "id": "a5179186",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "- 운항 횟수가 1000회 미만인 데이터를 제거하여 신뢰성 있는 데이터만 유지 (147개 -> 38개)\n",
+        "- 출발 지연시간이 가장 긴 상위 10개 및 가장 짧은 하위 10개 기종 추출\n",
+        "- .nlargest(), nsmallest() 를 사용해서 상,하위 10개의 'mean'열 데이터 추출\n"
+      ],
+      "id": "38917549"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "df_air_time = df_air_time.drop(df_air_time[df_air_time['count']<1000].index)\n",
+        "df_air_time.shape   # 기존 147개 데이터에서 38개의 데이터로 축소\n",
+        "\n",
+        "delay_time_top = df_air_time.nlargest(10, 'mean')\n",
+        "delay_time_bottom = df_air_time.nsmallest(10, 'mean')"
+      ],
+      "id": "56798a40",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {.column width=\"50%\"}\n",
+        "\n",
+        "상위 10개 추출"
+      ],
+      "id": "d6a021b5"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "print(delay_time_top[['model','mean','count']])"
+      ],
+      "id": "e36c9fa8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        ":::{.column width=\"50%\"}\n",
+        "\n",
+        "하위 10개 추출"
+      ],
+      "id": "a35371ff"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "print(delay_time_bottom[['model','mean','count']])"
+      ],
+      "id": "3c653a13",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "---\n",
+        "\n",
+        "- 그래프에서 제조사와 모델을 직관적으로 표시하기 위해 새로운 열 manu_model 생성\n",
+        "- 제조사 이름의 앞 3글자 + 두 번째 단어의 첫 글자 + 모델명을 조합하여 가독성을 높임\n"
+      ],
+      "id": "c91e1628"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#|code-fold: true\n",
+        "delay_time_top['manu_model'] = ( delay_time_top['manufacturer'].str[:3] +  delay_time_top['manufacturer'].str.split().str[1].str[0].fillna(''))+ \"/\" + delay_time_top['model']\n",
+        "\n",
+        "delay_time_bottom['manu_model'] = ( delay_time_bottom['manufacturer'].str[:3] +  delay_time_bottom['manufacturer'].str.split().str[1].str[0].fillna(''))+ \"/\" + delay_time_bottom['model']\n"
+      ],
+      "id": "fffb2a73",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "print(delay_time_top[['manufacturer','model','manu_model']])"
+      ],
+      "id": "fe70f75b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "#### 분석 및 시각화 \n"
+      ],
+      "id": "61b47b9c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "plt.figure(figsize=(14,5))\n",
+        "sns.barplot(x=delay_time_top['manu_model'],y=delay_time_top['mean'], palette=\"Reds_r\")\n",
+        "plt.ylim(0, 50)\n",
+        "plt.xlabel(\"model by manufacturer\",fontsize=20)\n",
+        "plt.ylabel(\"delay time_mean\",fontsize=20)\n",
+        "plt.title(\"Bad flights\",fontsize=20)\n",
+        "plt.xticks(rotation=40,fontsize=16, fontweight='bold');"
+      ],
+      "id": "c85b0bf8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "#### 분석 및 시각화 \n"
+      ],
+      "id": "d2a4146f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "plt.figure(figsize=(14,5))\n",
+        "sns.barplot(x=delay_time_bottom['manu_model'],y=delay_time_bottom['mean'], palette=\"Blues_r\")\n",
+        "plt.ylim(-5, 50)\n",
+        "plt.xlabel(\"model by manufacturer\",fontsize=20)\n",
+        "plt.ylabel(\"delay time_mean\",fontsize=20)\n",
+        "plt.title(\"Good flights\",fontsize=20)\n",
+        "plt.xticks(rotation=40,fontsize=16, fontweight='bold');"
+      ],
+      "id": "1f2d2933",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "#### 결론\n",
+        "\n",
+        "- 가장 신뢰성이 떨어지는 기종 Top3는 '**EMB**'사의 '**EMB-145LR**'기종, '**BOE**'사의 '**717-200**'기종 , '**CAN**'사의 '**CL-600-2B19**'기종이다\n",
+        "- 또한 제조사만 봤을때 '**BOMI**'사 **4대**, '**EMB**'사 **2대** , '**BOE**'사 **2대**가 나타나여 이 제조사들의 model이 지연이 잘되는 걸 알 수 있다.\n",
+        "- EMB는 엠브라에르, BOE는 보잉, CAN은 케나다에어\n",
+        "\n",
+        "\n",
+        "<br>\n",
+        "\n",
+        "\n",
+        "- 반대로 신뢰성이 높은 기종 Top3는 '**BOE**'사의 '**757-231**'기종, '**BOE**'사의 '**757-2Q8**' 기종, '**AIR**'사의 '**A321-211**'기종 이다.\n",
+        "- 또한 제조사만 봤을때 '**BOE**'사 **5대**, '**AIRBUS**'사 **2대**, '**AIR Industry**'사 **2대**로 신뢰성 높은  model을 만들어 내는것을 알 수 있다.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "### 피해야 할 비행기\n",
+        "\n",
+        "\n",
+        "<div class=\"plane_images\">\n",
+        "\n",
+        "<div class=\"plane_image\">\n",
+        "<h3 style=\"font-size: 30px;\">ERJ 145</h3>\n",
+        "![](img\\erj145_kp.jpg)\n",
+        "</div>\n",
+        "\n",
+        "\n",
+        "<div class=\"plane_image\">\n",
+        "<h3 style=\"font-size: 30px;\">BOE 717</h3>\n",
+        "![](img\\boe717.jpg)\n",
+        "</div>\n",
+        "\n",
+        "\n",
+        "<div class=\"plane_image\">\n",
+        "<h3 style=\"font-size: 30px;\">CL-600-2B19</h3>\n",
+        "![](img\\CL-600-2B19.jpg)\n",
+        "</div>\n",
+        "\n",
+        "</div>\n",
+        "\n",
+        "---\n",
+        "\n",
+        "#### 4.3 제조사별 엔진 지연 시간 원인 도출\n",
+        "\n",
+        "- 앞선 결과에서 더 자세한 원인을 분석하고자함\n"
+      ],
+      "id": "f4a01f22"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "delay_time_top[\"flight_type\"] = \"bad flight\"\n",
+        "delay_time_bottom[\"flight_type\"] = \"good flight\"\n",
+        "concat_data = pd.concat([delay_time_top, delay_time_bottom], axis=0)\n",
+        "df = pd.merge(concat_data,df, on=['manufacturer','model'])\n",
+        "\n",
+        "delay_time_bottom.head(2)\n",
+        "concat_data.columns\n",
+        "df.columns"
+      ],
+      "id": "daea1bcf",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n"
+      ],
+      "id": "2c5e5508"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "count_avg1 = df.groupby(['manufacturer','manu_model','flight_type','manuf_year'])['delay_time'].agg(['mean','count']).reset_index()\n",
+        "\n",
+        "count_avg1.head(2)"
+      ],
+      "id": "e1250fc0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n"
+      ],
+      "id": "c04d9faf"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "sns.scatterplot(data=count_avg1, x='manuf_year', y='mean', hue='flight_type', palette='viridis')\n",
+        "plt.legend(title='flight_type', bbox_to_anchor=(1.05, 0.5), loc='center left')\n",
+        "\n",
+        "# 그래프 제목과 레이블\n",
+        "plt.title('Scatterplot: year vs Departure Delay')\n",
+        "plt.xlabel('Year')\n",
+        "plt.ylabel('Average Delay')\n",
+        "\n",
+        "# 그래프 출력\n",
+        "plt.show()"
+      ],
+      "id": "28270e12",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n"
+      ],
+      "id": "9696b4a0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| code-fold: true\n",
+        "sns.scatterplot(data=count_avg1, x='manuf_year', y='mean', hue='manufacturer', style='flight_type', palette='tab10',s=100)\n",
+        "\n",
+        "plt.legend(title='Manufacturer', bbox_to_anchor=(1.05, 0.5), loc='center left')\n",
+        "plt.legend(loc='upper left', fontsize=5)\n",
+        "# 그래프 제목과 레이블\n",
+        "plt.title('Scatterplot: year vs Departure Delay')\n",
+        "plt.xlabel('Year')\n",
+        "plt.ylabel('Average Delay')\n",
+        "plt.show()"
+      ],
+      "id": "8aecd172",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\Users\\USER\\AppData\\Roaming\\Python\\share\\jupyter\\kernels\\python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
