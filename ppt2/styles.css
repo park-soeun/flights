@@ -140,3 +140,9 @@
     height: 100%;              /* 원본 비율 유지 */
     object-fit: contain;       /* 이미지가 비율을 유지하면서 들어가도록 설정 */
 }
+
+
+.reveal .num p {
+    font-size: 25px;
+    padding-top: 10px;
+}
