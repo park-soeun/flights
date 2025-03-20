@@ -10,6 +10,7 @@ format:
     slide-number: true  # 페이지 번호 표시
     footer: "Team 6 | LS BigData School | 2025"  # 푸터 설정
     logo: "logo3.png"  # 로고 삽입
+    echo: true
 ---
 
 ## 분석 주제
@@ -25,6 +26,8 @@ format:
 | `flights.csv`  | 항공편 정보 (출발지, 도착지, 지연 시간 등) |
 | `planes.csv`   | 항공기 정보 (제조 연도, 모델 등)           |
 | `airlines.csv` | 항공사 코드 및 항공사명 정보               |
+| `t100.csv`     | 미국 국내선 항공사의 운항 실적 (항공편 수, 좌석 수, 승객 수, 운항 거리 등) 제공 |
+
 
 ---
 
@@ -38,11 +41,20 @@ import matplotlib.pyplot as plt
 
 plane_df = planes.rename(columns={'year': 'manuf_year'})
 df = pd.merge(flights, plane_df, on='tailnum')
+pass_df = pd.read_csv('./data/t100.csv')
 ```
 
 ### **2. 데이터 전처리**
 
-#####  날짜 처리 (`datetime` 변환)
+##### `flights.csv`와 `planes.csv`를 `tailnum`을 기준으로 병합
+
+```{python}
+df = pd.merge(flights, plane_df, on='tailnum')
+```
+
+---
+
+#####  `datetime` 컬럼을 생성 (`year`, `month`, `day`, `hour`, `minute`를 변환)
 ```{python}
 df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour', 'minute']])
 ```
@@ -52,19 +64,29 @@ df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour', 'minute']])
 #| echo: false
 #| eval: true
 df['datetime'].info()
-
 ```
-
 
 ---
 
-##### 문자열 처리 (항공사 코드 -\> 이름 매핑)
+##### `airlines.csv`를 `carrier` 기준으로 병합하여 항공사명 추가
 ```{python}
-#| echo: true
 #| eval: true
 df = df.merge(airlines, on="carrier", how="left")   
 print(df.info())
+```
 
+---
+
+##### `t100.csv`의 columns를 소문자로 변경
+
+```{python}
+pass_df.columns = pass_df.columns.str.lower()
+```
+
+<br>
+
+```{python}
+pass_df.columns.unique()
 ```
 
 ---
@@ -72,13 +94,165 @@ print(df.info())
 # **3. 분석**
  **총 3개의 분석을 진행합니다.**
 
-- **3.1 항공사별 출발 및 도착 지연 시간 분석**
+- **3.1 탑승률과 항공편 지연 관계 분석**
 - **3.2 제작 연도별 기체 성능 분석**
 - **3.3 특정 노선의 지연 시간 분석**
 
 ---
 
-### **3.1 항공사별 출발 및 도착 지연 시간 분석** ✈️
+### **3.1 탑승률과 항공편 지연 관계 분석** 
+
+(1) 분석 목적
+탑승률이 높은 항공편이 지연될 가능성이 더 높은지 알아보기 위해 분석
+탑승률이 높을수록 승객 탑승 절차가 길어지고, 수하물 처리 시간이 증가하며, 출발 준비 시간이 지연될 가능성이 있기 때문에 이를 검증하는 것이 목적
+
+---
+
+
+(2) 사용 데이터
+
+| 데이터셋       | 설명                                       | 주요 컬럼 |
+|----------------|--------------------------------------------|----------------|
+| `flights.csv`  | 항공편 정보 (출발지, 도착지, 지연 시간 등) | `flight`, `carrier`, `origin`, `dest`, `dep_delay`, `arr_delay`, `distance`, `year`, `month` |
+| `planes.csv`   | 항공기 정보 (제조 연도, 모델 등)           | `tailnum`, `manufacturer`, `model`, `year` |
+| `airlines.csv` | 항공사 코드 및 항공사명 정보               | `carrier`, `name` |
+| `T-100.csv`    | (외부 데이터)미국 국내선 항공사의 운항 실적 (항공편 수, 좌석 수, 승객 수, 운항 거리 등) | `year`, `month`, `carrier`, `origin`, `dest`, `seats`, `passengers` |
+
+---
+
+(3) 추가 데이터 전처리
+
+1. 탑승률 계산을 위한 데이터 전처리
+   - `T-100.csv`에서 `origin`, `dest`, `carrier`가 기존 `flights.csv`에 존재하는 항목들만 남김
+   
+   ```{python}
+   #| echo: true
+    # origin
+    pass_df = pass_df[pass_df['origin'].isin(['EWR', 'LGA', 'JFK'])]
+
+    # dest
+    dest_list = df['dest'].unique()
+    pass_df = pass_df[pass_df['dest'].isin(dest_list)]
+
+    # carrier
+    carrier_list = df['carrier'].unique()
+    pass_df = pass_df[pass_df['carrier'].isin(carrier_list)]
+   ```
+
+---
+
+   - `year`, `month`, `carrier`, `origin`, `dest` 기준으로 `seats`, `passengers` 합산
+
+```{python}
+pass_grouped = pass_df.groupby(['year', 'month', 'carrier', 'origin', 'dest'])[['seats', 'passengers']].sum().reset_index()
+```
+
+---
+
+   - `flights.csv`를 같은 기준으로 그룹화하여 `flight_count`, `avg_dep_delay`, `avg_arr_delay`, `total_distance` 계산
+
+```{python}
+flight_grouped = df.groupby(['year', 'month', 'carrier', 'origin', 'dest']).agg(
+  flight_count=('flight', 'count'),
+  avg_dep_delay=('dep_delay', 'mean'),
+  avg_arr_delay=('arr_delay', 'mean'),
+  total_distance=('distance', 'sum')
+).reset_index()
+```
+
+
+---
+
+   - 두 데이터 병합 후 **탑승률(Load Factor) 계산:** `passengers / seats`
+
+```{python}
+merged_df = flight_grouped.merge(
+pass_grouped,
+on=['year', 'month', 'carrier', 'origin', 'dest'],
+how='left'
+)
+
+merged_df['load_factor'] = merged_df['passengers'] / merged_df['seats']
+
+```
+
+---
+
+2. 이상치 제거
+   - 출발 지연(`avg_dep_delay`)에서 IQR을 이용한 이상치 제거
+   - 도착 지연(`avg_arr_delay`)에서도 동일한 방식 적용
+
+```{python}
+#| eval: true
+def remove_outliers(df, column):
+  Q1 = df[column].quantile(0.25)  # 1사분위수 (Q1)
+  Q3 = df[column].quantile(0.75)  # 3사분위수 (Q3)
+  IQR = Q3 - Q1  # IQR 계산
+  lower_bound = Q1 - 1.5 * IQR  # 이상치 하한
+  upper_bound = Q3 + 1.5 * IQR  # 이상치 상한
+  return df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
+```
+
+```{python}
+cleaned_df = remove_outliers(merged_df, "avg_dep_delay")
+```
+
+
+---
+
+(4) 분석 및 시각화
+
+
+```{python}
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=cleaned_df, x="load_factor", y="avg_dep_delay", alpha=0.5, label="Data")
+sns.regplot(data=cleaned_df, x="load_factor", y="avg_dep_delay", scatter=False, color="red", line_kws={"linewidth":2}, label="Trend Line")
+plt.xlabel("Load Factor")
+plt.ylabel("Average Departure Delay")
+plt.title("Load Factor vs Average Departure Delay (With Trend Line)")
+plt.axhline(0, color="gray", linestyle="--")
+plt.legend()
+plt.show()
+```
+
+
+---
+
+```{python}
+cleaned_df["load_factor_bin"] = pd.cut(cleaned_df["load_factor"], bins=[0, 0.3, 0.5, 0.7, 0.9, 1], labels=["0-30%", "30-50%", "50-70%", "70-90%", "90-100%"])
+summary_stats = cleaned_df.groupby("load_factor_bin")[["avg_dep_delay", "avg_arr_delay"]].mean().reset_index()
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=summary_stats, x="load_factor_bin", y="avg_dep_delay", marker="o", label="출발 지연 (분)", color="blue")
+sns.lineplot(data=summary_stats, x="load_factor_bin", y="avg_arr_delay", marker="s", label="도착 지연 (분)", color="red")
+plt.xlabel("Load Factor (탑승률) 범위")
+plt.ylabel("평균 지연 시간 (분)")
+plt.title("탑승률에 따른 평균 출발/도착 지연 시간")
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+---
+
+(5) 결과
+- **탑승률이 낮은 항공편(0-30%)은 출발 지연이 적고, 도착은 오히려 빨라지는 경향을 보임**
+- **탑승률이 50%를 넘어서면서부터 출발 및 도착 지연 시간이 증가하는 패턴이 나타남**
+- **탑승률이 높은 항공편(90-100%)은 출발 지연이 가장 크며(평균 14.2분), 도착 지연도 가장 높음(평균 7.7분)**
+- **탑승률과 출발 지연의 상관관계 분석 결과, 중간 정도의 양의 상관관계를 가짐 (상관계수 0.5~0.6 수준)**
+
+
+---
+
+
+(6) 결론
+
+이 연구를 통해 **탑승률이 높을수록 항공편 지연이 증가하는 경향이 확인됨**.  
+특히 만석(90-100%) 항공편의 경우 출발 및 도착 지연이 평균적으로 더 높아지는 패턴을 보임.  
+이는 **탑승 인원 증가로 인한 수하물 처리, 탑승 절차 지연, 게이트 대기 시간 증가 등의 복합적인 요인이 영향을 미쳤을 가능성이 높음**.  
+추가적으로 **공항별 혼잡도, 시간대별 지연 패턴을 포함한 심층 분석이 필요함.**
+
+---
+
 
 #####  **분석 목적**
 - 항공사별 출발(`dep_delay`) 및 도착 지연(`arr_delay`) 시간의 관계 분석  
