@@ -379,37 +379,29 @@ plt.xticks(rotation=40,fontsize=16, fontweight='bold');
 
 - 가장 신뢰성이 떨어지는 기종 Top3는 '**EMB**'사의 '**EMB-145LR**'기종, '**BOE**'사의 '**717-200**'기종 , '**CAN**'사의 '**CL-600-2B19**'기종이다
 - 또한 제조사만 봤을때 '**BOMI**'사 **4대**, '**EMB**'사 **2대** , '**BOE**'사 **2대**가 나타나여 이 제조사들의 model이 지연이 잘되는 걸 알 수 있다.
+
 <br>
+
+
 - 반대로 신뢰성이 높은 기종 Top3는 '**BOE**'사의 '**757-231**'기종, '**BOE**'사의 '**757-2Q8**' 기종, '**AIR**'사의 '**A321-211**'기종 이다.
 - 또한 제조사만 봤을때 
--
 
 ---
 
-### **3.3 특정 노선의 지연 시간 분석** 🌍
+### **3.3 
 
 #####  **분석 목적**
-- 특정 노선(예: JFK → LAX)의 출발 및 도착 지연 시간이 특별한 패턴을 보일까?  
-- 특정 시간대에 지연이 집중되는가?
+- 
+- 
 
 #####  **데이터 시각화**
-```{python}
-jfk_lax_flights = df[df['dest'] == 'LAX']
 
-plt.figure(figsize=(10,6))
-sns.boxplot(data=jfk_lax_flights, x='hour', y='dep_delay')
-plt.xlabel("Departure Hour")
-plt.ylabel("Departure Delay (minutes)")
-plt.title("JFK → LAX: Departure Delay by Time of Day")
-plt.grid(True)
-plt.show()
-```
 
 ---
 
 ###  **결론**
-1️⃣ 항공사별로 **출발 지연과 도착 지연의 상관관계가 다름**  
-2️⃣ 오래된 기체일수록 **출발 및 도착 지연 시간이 증가하는 경향**  
-3️⃣ 특정 노선에서는 **출발 시간대에 따라 지연 패턴이 다름**  
+1️⃣ 
+2️⃣ 
+3️⃣ 
 
 ---

@@ -241,19 +241,24 @@
 <section class="slide level2">
 
 <h3 id="데이터-전처리"><strong>2. 데이터 전처리</strong></h3>
-
 <h5 id="flights.csv와-planes.csv를-tailnum을-기준으로-병합"><code>flights.csv</code>와 <code>planes.csv</code>를 <code>tailnum</code>을 기준으로 병합</h5>
-<div id="e3281776" class="cell" data-execution_count="2">
+<div id="4046bb7b" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a>df <span class="op">=</span> pd.merge(flights, plane_df, on<span class="op">=</span><span class="st">'tailnum'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section class="slide level2">
 
 <h5 id="datetime-컬럼을-생성-year-month-day-hour-minute를-변환"><code>datetime</code> 컬럼을 생성 (<code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>를 변환)</h5>
-<div id="9cbe692c" class="cell" data-execution_count="3">
+<div id="13012bc4" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a>df[<span class="st">'datetime'</span>] <span class="op">=</span> pd.to_datetime(df[[<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'day'</span>, <span class="st">'hour'</span>, <span class="st">'minute'</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<div id="1af776e8" class="cell" data-execution_count="4">
+<div id="1beb231f" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.series.Series'&gt;
 RangeIndex: 284170 entries, 0 to 284169
@@ -268,11 +273,13 @@ memory usage: 2.2 MB</code></pre>
 </section>
 <section class="slide level2">
 
-
 <h5 id="airlines.csv를-carrier-기준으로-병합하여-항공사명-추가"><code>airlines.csv</code>를 <code>carrier</code> 기준으로 병합하여 항공사명 추가</h5>
-<div id="9bd3aae8" class="cell" data-execution_count="5">
+<div id="d2001fdf" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a>df <span class="op">=</span> df.merge(airlines, on<span class="op">=</span><span class="st">"carrier"</span>, how<span class="op">=</span><span class="st">"left"</span>)   </span>
 <span id="cb4-2"><a href=""></a><span class="bu">print</span>(df.info())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 284170 entries, 0 to 284169
@@ -317,12 +324,18 @@ None</code></pre>
 <section class="slide level2">
 
 <h5 id="t100.csv의-columns를-소문자로-변경"><code>t100.csv</code>의 columns를 소문자로 변경</h5>
-<div id="bf5c1a53" class="cell" data-execution_count="6">
+<div id="378965bb" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a>pass_df.columns <span class="op">=</span> pass_df.columns.<span class="bu">str</span>.lower()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p><br></p>
-<div id="2e940ce9" class="cell" data-execution_count="7">
+<div id="9d3b5b7b" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a>pass_df.columns.unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>Index(['departures_performed', 'seats', 'passengers', 'unique_carrier',
        'airline_id', 'unique_carrier_name', 'carrier', 'carrier_name',
@@ -404,7 +417,9 @@ None</code></pre>
 <ul>
 <li><code>T-100.csv</code>에서 <code>origin</code>, <code>dest</code>, <code>carrier</code>가 기존 <code>flights.csv</code>에 존재하는 항목들만 남김</li>
 </ul>
-<div id="70644ca6" class="cell" data-execution_count="8">
+<div id="d2bab79a" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a> <span class="co"># origin</span></span>
 <span id="cb9-2"><a href=""></a> pass_df <span class="op">=</span> pass_df[pass_df[<span class="st">'origin'</span>].isin([<span class="st">'EWR'</span>, <span class="st">'LGA'</span>, <span class="st">'JFK'</span>])]</span>
 <span id="cb9-3"><a href=""></a></span>
@@ -415,6 +430,7 @@ None</code></pre>
 <span id="cb9-8"><a href=""></a> <span class="co"># carrier</span></span>
 <span id="cb9-9"><a href=""></a> carrier_list <span class="op">=</span> df[<span class="st">'carrier'</span>].unique()</span>
 <span id="cb9-10"><a href=""></a> pass_df <span class="op">=</span> pass_df[pass_df[<span class="st">'carrier'</span>].isin(carrier_list)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div></li>
 </ol>
 </section>
@@ -423,8 +439,11 @@ None</code></pre>
 <ul>
 <li><code>year</code>, <code>month</code>, <code>carrier</code>, <code>origin</code>, <code>dest</code> 기준으로 <code>seats</code>, <code>passengers</code> 합산</li>
 </ul>
-<div id="83ab09b1" class="cell" data-execution_count="9">
+<div id="71748aa3" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href=""></a>pass_grouped <span class="op">=</span> pass_df.groupby([<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'carrier'</span>, <span class="st">'origin'</span>, <span class="st">'dest'</span>])[[<span class="st">'seats'</span>, <span class="st">'passengers'</span>]].<span class="bu">sum</span>().reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section class="slide level2">
@@ -432,13 +451,16 @@ None</code></pre>
 <ul>
 <li><code>flights.csv</code>를 같은 기준으로 그룹화하여 <code>flight_count</code>, <code>avg_dep_delay</code>, <code>avg_arr_delay</code>, <code>total_distance</code> 계산</li>
 </ul>
-<div id="3e8736d7" class="cell" data-execution_count="10">
+<div id="40cca2a7" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href=""></a>flight_grouped <span class="op">=</span> df.groupby([<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'carrier'</span>, <span class="st">'origin'</span>, <span class="st">'dest'</span>]).agg(</span>
 <span id="cb11-2"><a href=""></a>  flight_count<span class="op">=</span>(<span class="st">'flight'</span>, <span class="st">'count'</span>),</span>
 <span id="cb11-3"><a href=""></a>  avg_dep_delay<span class="op">=</span>(<span class="st">'dep_delay'</span>, <span class="st">'mean'</span>),</span>
 <span id="cb11-4"><a href=""></a>  avg_arr_delay<span class="op">=</span>(<span class="st">'arr_delay'</span>, <span class="st">'mean'</span>),</span>
 <span id="cb11-5"><a href=""></a>  total_distance<span class="op">=</span>(<span class="st">'distance'</span>, <span class="st">'sum'</span>)</span>
 <span id="cb11-6"><a href=""></a>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section class="slide level2">
@@ -446,7 +468,9 @@ None</code></pre>
 <ul>
 <li>두 데이터 병합 후 <strong>탑승률(Load Factor) 계산:</strong> <code>passengers / seats</code></li>
 </ul>
-<div id="42121cf6" class="cell" data-execution_count="11">
+<div id="7f9c291c" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href=""></a>merged_df <span class="op">=</span> flight_grouped.merge(</span>
 <span id="cb12-2"><a href=""></a>pass_grouped,</span>
 <span id="cb12-3"><a href=""></a>on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'carrier'</span>, <span class="st">'origin'</span>, <span class="st">'dest'</span>],</span>
@@ -454,6 +478,7 @@ None</code></pre>
 <span id="cb12-5"><a href=""></a>)</span>
 <span id="cb12-6"><a href=""></a></span>
 <span id="cb12-7"><a href=""></a>merged_df[<span class="st">'load_factor'</span>] <span class="op">=</span> merged_df[<span class="st">'passengers'</span>] <span class="op">/</span> merged_df[<span class="st">'seats'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section class="slide level2">
@@ -465,7 +490,9 @@ None</code></pre>
 <li>도착 지연(<code>avg_arr_delay</code>)에서도 동일한 방식 적용</li>
 </ul></li>
 </ol>
-<div id="8a8e93e0" class="cell" data-execution_count="12">
+<div id="1ce9cfda" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href=""></a><span class="kw">def</span> remove_outliers(df, column):</span>
 <span id="cb13-2"><a href=""></a>  Q1 <span class="op">=</span> df[column].quantile(<span class="fl">0.25</span>)  <span class="co"># 1사분위수 (Q1)</span></span>
 <span id="cb13-3"><a href=""></a>  Q3 <span class="op">=</span> df[column].quantile(<span class="fl">0.75</span>)  <span class="co"># 3사분위수 (Q3)</span></span>
@@ -473,9 +500,13 @@ None</code></pre>
 <span id="cb13-5"><a href=""></a>  lower_bound <span class="op">=</span> Q1 <span class="op">-</span> <span class="fl">1.5</span> <span class="op">*</span> IQR  <span class="co"># 이상치 하한</span></span>
 <span id="cb13-6"><a href=""></a>  upper_bound <span class="op">=</span> Q3 <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> IQR  <span class="co"># 이상치 상한</span></span>
 <span id="cb13-7"><a href=""></a>  <span class="cf">return</span> df[(df[column] <span class="op">&gt;=</span> lower_bound) <span class="op">&amp;</span> (df[column] <span class="op">&lt;=</span> upper_bound)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<div id="7d5e0fac" class="cell" data-execution_count="13">
+<div id="cb53773c" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href=""></a>cleaned_df <span class="op">=</span> remove_outliers(merged_df, <span class="st">"avg_dep_delay"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section class="slide level2">
@@ -483,7 +514,9 @@ None</code></pre>
 <ol start="4" type="1">
 <li>분석 및 시각화</li>
 </ol>
-<div id="f007c9a7" class="cell" data-execution_count="14">
+<div id="f975aab3" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href=""></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
 <span id="cb15-2"><a href=""></a>sns.scatterplot(data<span class="op">=</span>cleaned_df, x<span class="op">=</span><span class="st">"load_factor"</span>, y<span class="op">=</span><span class="st">"avg_dep_delay"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Data"</span>)</span>
 <span id="cb15-3"><a href=""></a>sns.regplot(data<span class="op">=</span>cleaned_df, x<span class="op">=</span><span class="st">"load_factor"</span>, y<span class="op">=</span><span class="st">"avg_dep_delay"</span>, scatter<span class="op">=</span><span class="va">False</span>, color<span class="op">=</span><span class="st">"red"</span>, line_kws<span class="op">=</span>{<span class="st">"linewidth"</span>:<span class="dv">2</span>}, label<span class="op">=</span><span class="st">"Trend Line"</span>)</span>
@@ -493,6 +526,7 @@ None</code></pre>
 <span id="cb15-7"><a href=""></a>plt.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"gray"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
 <span id="cb15-8"><a href=""></a>plt.legend()</span>
 <span id="cb15-9"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -504,7 +538,9 @@ None</code></pre>
 </section>
 <section class="slide level2">
 
-<div id="01538e45" class="cell" data-execution_count="15">
+<div id="e726013f" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href=""></a>cleaned_df[<span class="st">"load_factor_bin"</span>] <span class="op">=</span> pd.cut(cleaned_df[<span class="st">"load_factor"</span>], bins<span class="op">=</span>[<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>, <span class="dv">1</span>], labels<span class="op">=</span>[<span class="st">"0-30%"</span>, <span class="st">"30-50%"</span>, <span class="st">"50-70%"</span>, <span class="st">"70-90%"</span>, <span class="st">"90-100%"</span>])</span>
 <span id="cb16-2"><a href=""></a>summary_stats <span class="op">=</span> cleaned_df.groupby(<span class="st">"load_factor_bin"</span>)[[<span class="st">"avg_dep_delay"</span>, <span class="st">"avg_arr_delay"</span>]].mean().reset_index()</span>
 <span id="cb16-3"><a href=""></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
@@ -516,6 +552,7 @@ None</code></pre>
 <span id="cb16-9"><a href=""></a>plt.legend()</span>
 <span id="cb16-10"><a href=""></a>plt.grid(<span class="va">True</span>)</span>
 <span id="cb16-11"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -556,8 +593,9 @@ None</code></pre>
 <li>출발이 늦으면 도착도 늦을까?</li>
 </ul>
 <h5 id="데이터-시각화"><strong>데이터 시각화</strong></h5>
-
-<div id="6e7e2a31" class="cell" data-execution_count="16">
+<div id="3a46cb69" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href=""></a>delay_stats_by_carrier <span class="op">=</span> flights.groupby(<span class="st">'carrier'</span>)[[<span class="st">'dep_delay'</span>, <span class="st">'arr_delay'</span>]].mean().reset_index()</span>
 <span id="cb17-2"><a href=""></a>delay_stats_by_carrier <span class="op">=</span> delay_stats_by_carrier.merge(airlines, on<span class="op">=</span><span class="st">'carrier'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
 <span id="cb17-3"><a href=""></a></span>
@@ -570,6 +608,7 @@ None</code></pre>
 <span id="cb17-10"><a href=""></a>plt.legend(title<span class="op">=</span><span class="st">"Airline"</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="dv">1</span>), loc<span class="op">=</span><span class="st">'upper left'</span>)</span>
 <span id="cb17-11"><a href=""></a>plt.grid(<span class="va">True</span>)</span>
 <span id="cb17-12"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -590,18 +629,28 @@ None</code></pre>
 <section class="slide level2">
 
 <h5 id="데이터-전처리-1"><strong>데이터 전처리</strong></h5>
-<div id="a517c1d6" class="cell" data-execution_count="7">
+<div id="84f3f0b2" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a>df <span class="op">=</span> pd.merge(flights,planes, on <span class="op">=</span><span class="st">'tailnum'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
-<span id="cb4-2"><a href=""></a></span>
-<span id="cb4-3"><a href=""></a>df[<span class="st">'delay_time'</span>] <span class="op">=</span> df[<span class="st">'arr_delay'</span>] <span class="op">+</span> df[<span class="st">'dep_delay'</span>]</span>
-<span id="cb4-4"><a href=""></a></span>
-<span id="cb4-5"><a href=""></a>df_air_time <span class="op">=</span> (</span>
-<span id="cb4-6"><a href=""></a>    df.groupby([<span class="st">'manufacturer'</span>, <span class="st">'model'</span>])[<span class="st">"delay_time"</span>]</span>
-<span id="cb4-7"><a href=""></a>    .agg([<span class="st">'mean'</span>, <span class="st">'count'</span>]).sort_values(<span class="st">'mean'</span>, ascending<span class="op">=</span><span class="va">False</span>)  </span>
-<span id="cb4-8"><a href=""></a>).reset_index()</span>
-<span id="cb4-9"><a href=""></a><span class="bu">print</span>(df_air_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href=""></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb18-2"><a href=""></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb18-3"><a href=""></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb18-4"><a href=""></a></span>
+<span id="cb18-5"><a href=""></a><span class="im">from</span> nycflights13 <span class="im">import</span> flights, planes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="8c351708" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href=""></a>df <span class="op">=</span> pd.merge(flights,planes, on <span class="op">=</span><span class="st">'tailnum'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb19-2"><a href=""></a></span>
+<span id="cb19-3"><a href=""></a>df[<span class="st">'delay_time'</span>] <span class="op">=</span> df[<span class="st">'arr_delay'</span>] <span class="op">+</span> df[<span class="st">'dep_delay'</span>]</span>
+<span id="cb19-4"><a href=""></a></span>
+<span id="cb19-5"><a href=""></a>df_air_time <span class="op">=</span> (</span>
+<span id="cb19-6"><a href=""></a>    df.groupby([<span class="st">'manufacturer'</span>, <span class="st">'model'</span>])[<span class="st">"delay_time"</span>]</span>
+<span id="cb19-7"><a href=""></a>    .agg([<span class="st">'mean'</span>, <span class="st">'count'</span>]).sort_values(<span class="st">'mean'</span>, ascending<span class="op">=</span><span class="va">False</span>)  </span>
+<span id="cb19-8"><a href=""></a>).reset_index()</span>
+<span id="cb19-9"><a href=""></a><span class="bu">print</span>(df_air_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>             manufacturer     model      mean  count
@@ -629,20 +678,20 @@ None</code></pre>
 <section class="slide level2">
 
 <h5 id="데이터-전처리-2"><strong>데이터 전처리</strong></h5>
-<div id="a904fbaa" class="cell" data-execution_count="8">
+<div id="8f0873ee" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a>df_air_time <span class="op">=</span> df_air_time.drop(df_air_time[df_air_time[<span class="st">'count'</span>]<span class="op">&lt;</span><span class="dv">1000</span>].index)</span>
-<span id="cb6-2"><a href=""></a>df_air_time.shape   <span class="co"># 기존 147개 데이터에서 38개의 데이터로 축소</span></span>
-<span id="cb6-3"><a href=""></a></span>
-<span id="cb6-4"><a href=""></a>delay_time_top <span class="op">=</span> df_air_time.nlargest(<span class="dv">10</span>, <span class="st">'mean'</span>)</span>
-<span id="cb6-5"><a href=""></a>delay_time_bottom <span class="op">=</span> df_air_time.nsmallest(<span class="dv">10</span>, <span class="st">'mean'</span>)</span>
-<span id="cb6-6"><a href=""></a><span class="co"># 상위 10개, 하위 10개 추출</span></span>
-<span id="cb6-7"><a href=""></a><span class="bu">print</span>(delay_time_top)</span>
-<span id="cb6-8"><a href=""></a><span class="bu">print</span>(delay_time_bottom)</span>
-<span id="cb6-9"><a href=""></a></span>
-<span id="cb6-10"><a href=""></a></span>
-<span id="cb6-11"><a href=""></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href=""></a>df_air_time <span class="op">=</span> df_air_time.drop(df_air_time[df_air_time[<span class="st">'count'</span>]<span class="op">&lt;</span><span class="dv">1000</span>].index)</span>
+<span id="cb21-2"><a href=""></a>df_air_time.shape   <span class="co"># 기존 147개 데이터에서 38개의 데이터로 축소</span></span>
+<span id="cb21-3"><a href=""></a></span>
+<span id="cb21-4"><a href=""></a>delay_time_top <span class="op">=</span> df_air_time.nlargest(<span class="dv">10</span>, <span class="st">'mean'</span>)</span>
+<span id="cb21-5"><a href=""></a>delay_time_bottom <span class="op">=</span> df_air_time.nsmallest(<span class="dv">10</span>, <span class="st">'mean'</span>)</span>
+<span id="cb21-6"><a href=""></a><span class="co"># 상위 10개, 하위 10개 추출</span></span>
+<span id="cb21-7"><a href=""></a><span class="bu">print</span>(delay_time_top)</span>
+<span id="cb21-8"><a href=""></a><span class="bu">print</span>(delay_time_bottom)</span>
+<span id="cb21-9"><a href=""></a></span>
+<span id="cb21-10"><a href=""></a></span>
+<span id="cb21-11"><a href=""></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     manufacturer        model       mean  count
@@ -678,13 +727,13 @@ None</code></pre>
 <section class="slide level2">
 
 <h5 id="데이터-전처리-3"><strong>데이터 전처리</strong></h5>
-<div id="64dc05a2" class="cell" data-execution_count="9">
+<div id="5e8a4ba0" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a>delay_time_top[<span class="st">'manu_model'</span>] <span class="op">=</span> delay_time_top[<span class="st">'manufacturer'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[:<span class="dv">3</span>] <span class="op">+</span> (x.split()[<span class="dv">1</span>][<span class="dv">0</span>] <span class="cf">if</span> <span class="bu">len</span>(x.split()) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">''</span>)) <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> delay_time_top[<span class="st">'model'</span>]</span>
-<span id="cb8-2"><a href=""></a>delay_time_bottom[<span class="st">'manu_model'</span>] <span class="op">=</span> delay_time_bottom[<span class="st">'manufacturer'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[:<span class="dv">3</span>] <span class="op">+</span> (x.split()[<span class="dv">1</span>][<span class="dv">0</span>] <span class="cf">if</span> <span class="bu">len</span>(x.split()) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">''</span>)) <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> delay_time_bottom[<span class="st">'model'</span>]</span>
-<span id="cb8-3"><a href=""></a><span class="bu">print</span>(delay_time_top)</span>
-<span id="cb8-4"><a href=""></a><span class="bu">print</span>(delay_time_bottom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href=""></a>delay_time_top[<span class="st">'manu_model'</span>] <span class="op">=</span> delay_time_top[<span class="st">'manufacturer'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[:<span class="dv">3</span>] <span class="op">+</span> (x.split()[<span class="dv">1</span>][<span class="dv">0</span>] <span class="cf">if</span> <span class="bu">len</span>(x.split()) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">''</span>)) <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> delay_time_top[<span class="st">'model'</span>]</span>
+<span id="cb23-2"><a href=""></a>delay_time_bottom[<span class="st">'manu_model'</span>] <span class="op">=</span> delay_time_bottom[<span class="st">'manufacturer'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[:<span class="dv">3</span>] <span class="op">+</span> (x.split()[<span class="dv">1</span>][<span class="dv">0</span>] <span class="cf">if</span> <span class="bu">len</span>(x.split()) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">''</span>)) <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> delay_time_bottom[<span class="st">'model'</span>]</span>
+<span id="cb23-3"><a href=""></a><span class="bu">print</span>(delay_time_top)</span>
+<span id="cb23-4"><a href=""></a><span class="bu">print</span>(delay_time_bottom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     manufacturer        model       mean  count  \
@@ -730,11 +779,21 @@ None</code></pre>
 </section>
 <section class="slide level2">
 
-<div id="20d54d1f" class="cell" data-execution_count="10">
+<div id="1833836a" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href=""></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">14</span>,<span class="dv">7</span>))</span>
+<span id="cb25-2"><a href=""></a>sns.barplot(x<span class="op">=</span>delay_time_top[<span class="st">'manu_model'</span>],y<span class="op">=</span>delay_time_top[<span class="st">'mean'</span>], palette<span class="op">=</span><span class="st">"Reds_r"</span>)</span>
+<span id="cb25-3"><a href=""></a>plt.ylim(<span class="dv">0</span>, <span class="dv">50</span>)</span>
+<span id="cb25-4"><a href=""></a>plt.xlabel(<span class="st">"model by manufacturer"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb25-5"><a href=""></a>plt.ylabel(<span class="st">"delay time_mean"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb25-6"><a href=""></a>plt.title(<span class="st">"Bad flights"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb25-7"><a href=""></a>plt.xticks(rotation<span class="op">=</span><span class="dv">40</span>,fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="250318_files/figure-revealjs/cell-11-output-1.png" width="1135" height="767"></p>
+<p><img data-src="250318_files/figure-revealjs/cell-22-output-1.png" width="1135" height="767"></p>
 </figure>
 </div>
 </div>
@@ -742,12 +801,21 @@ None</code></pre>
 </section>
 <section class="slide level2">
 
-<div id="a1e2bdc5" class="cell" data-execution_count="11">
+<div id="76073aef" class="cell" data-execution_count="22">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href=""></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">14</span>,<span class="dv">7</span>))</span>
+<span id="cb26-2"><a href=""></a>sns.barplot(x<span class="op">=</span>delay_time_bottom[<span class="st">'manu_model'</span>],y<span class="op">=</span>delay_time_bottom[<span class="st">'mean'</span>], palette<span class="op">=</span><span class="st">"Blues_r"</span>)</span>
+<span id="cb26-3"><a href=""></a>plt.ylim(<span class="op">-</span><span class="dv">5</span>, <span class="dv">10</span>)</span>
+<span id="cb26-4"><a href=""></a>plt.xlabel(<span class="st">"model by manufacturer"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb26-5"><a href=""></a>plt.ylabel(<span class="st">"delay time_mean"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb26-6"><a href=""></a>plt.title(<span class="st">"Good flights"</span>,fontsize<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb26-7"><a href=""></a>plt.xticks(rotation<span class="op">=</span><span class="dv">40</span>,fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="250318_files/figure-revealjs/cell-12-output-1.png" width="1136" height="798"></p>
-
+<p><img data-src="250318_files/figure-revealjs/cell-23-output-1.png" width="1136" height="798"></p>
 </figure>
 </div>
 </div>
@@ -758,39 +826,29 @@ None</code></pre>
 <h4 id="결론">결론</h4>
 <ul>
 <li>가장 신뢰성이 떨어지는 기종 Top3는 ‘<strong>EMB</strong>’사의’<strong>EMB-145LR</strong>’기종, ‘<strong>BOE</strong>’사의’<strong>717-200</strong>’기종 , ‘<strong>CAN</strong>’사의’<strong>CL-600-2B19</strong>’기종이다</li>
-<li>또한 제조사만 봤을때 ‘<strong>BOMI</strong>’사 <strong>4대</strong>,’<strong>EMB</strong>’사 <strong>2대</strong> , ’<strong>BOE</strong>’사 <strong>2대</strong>가 나타나여 이 제조사들의 model이 지연이 잘되는 걸 알 수 있다. <br></li>
+<li>또한 제조사만 봤을때 ‘<strong>BOMI</strong>’사 <strong>4대</strong>,’<strong>EMB</strong>’사 <strong>2대</strong> , ’<strong>BOE</strong>’사 <strong>2대</strong>가 나타나여 이 제조사들의 model이 지연이 잘되는 걸 알 수 있다.</li>
+</ul>
+<p><br></p>
+<ul>
 <li>반대로 신뢰성이 높은 기종 Top3는 ‘<strong>BOE</strong>’사의’<strong>757-231</strong>’기종, ‘<strong>BOE</strong>’사의’<strong>757-2Q8</strong>’ 기종, ‘<strong>AIR</strong>’사의’<strong>A321-211</strong>’기종 이다.</li>
 <li>또한 제조사만 봤을때</li>
-<li></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="특정-노선의-지연-시간-분석"><strong>3.3 특정 노선의 지연 시간 분석</strong> 🌍</h3>
-<h5 id="분석-목적-2"><strong>분석 목적</strong></h5>
+<h3 id="section">**3.3</h3>
+</section>
+<section id="분석-목적-2" class="slide level2">
+<h2>##### <strong>분석 목적</strong></h2>
 <ul>
-<li>특정 노선(예: JFK → LAX)의 출발 및 도착 지연 시간이 특별한 패턴을 보일까?<br>
-</li>
-<li>특정 시간대에 지연이 집중되는가?</li>
+<li></li>
 </ul>
 <h5 id="데이터-시각화-1"><strong>데이터 시각화</strong></h5>
-<div id="65484fdb" class="cell" data-execution_count="12">
-<div class="cell-output cell-output-display">
-<div>
-<figure>
-<p><img data-src="250318_files/figure-revealjs/cell-13-output-1.png" width="816" height="523"></p>
-
-</figure>
-</div>
-</div>
-</div>
 </section>
 <section class="slide level2">
 
 <h3 id="결론-1"><strong>결론</strong></h3>
-<p>1️⃣ 항공사별로 <strong>출발 지연과 도착 지연의 상관관계가 다름</strong><br>
-2️⃣ 오래된 기체일수록 <strong>출발 및 도착 지연 시간이 증가하는 경향</strong><br>
-3️⃣ 특정 노선에서는 <strong>출발 시간대에 따라 지연 패턴이 다름</strong></p>
+<p>1️⃣ 2️⃣ 3️⃣</p>
 </section>
 <section class="slide level2">
 
