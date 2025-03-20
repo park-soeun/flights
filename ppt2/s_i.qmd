@@ -17,10 +17,6 @@ format:
 - 항공편 지연은 항공사, 공항 운영, 승객에게 큰 영향을 미치는 중요한 요소
 - 지연을 유발하는 다양한 요인(탑승률, 항공기 모델, 노선 등)에 대한 분석 필요
 
-#### 분석 목표:
-- 탑승률과 지연의 관계 분석
-- 기체 제조사/모델별 지연 시간 분석
-- 지연 원인에 대한 세부 원인 분석
 
 
 ---
@@ -147,31 +143,7 @@ merged_df = flight_grouped.merge(
 merged_df['load_factor'] = merged_df['passengers'] / merged_df['seats']
 ```
 
-</div>
-
----
-
-
-
-
-
-- `year`, `month`, `carrier`, `origin`, `dest` 기준으로 `seats`, `passenger` 합산
-
-
-
-
----
-
-- `flights.csv`를 년/월/항공사/출발지/목적지 를 기준으로 그룹화하여 `flight_count`, `avg_dep_delay` 등을 계산
-
-
-
-- 최종적으로 두 데이터를 병합 후, 탑승률(`passengers`, `seats`) 계산 
-
-
-
-
-- 이상치 제거(IQR 방식)
+5️⃣ 이상치 제거(IQR 방식)
 
 ```{python}
 #| echo: false
@@ -187,8 +159,12 @@ cleaned_df = remove_outliers(merged_df, "avg_dep_delay")
 
 ```
 
+
+</div>
+
 ---
 
+<div class="section-title">4.1 탑승률과 항공편 지연 관계</div>
 
 #### 분석 및 시각화 
 
@@ -197,8 +173,9 @@ cleaned_df = remove_outliers(merged_df, "avg_dep_delay")
 #| code-fold: true
 cleaned_df["load_factor_bin"] = pd.cut(cleaned_df["load_factor"], bins=[0, 0.3, 0.5, 0.7, 0.9, 1], labels=["0-30%", "30-50%", "50-70%", "70-90%", "90-100%"])
 summary_stats = cleaned_df.groupby("load_factor_bin")[["avg_dep_delay", "avg_arr_delay"]].mean().reset_index()
-plt.figure(figsize=(10, 6))
-sns.barplot(data=summary_stats, x="load_factor_bin", y="avg_dep_delay", color="blue")
+plt.figure(figsize=(12, 4))
+sns.barplot(data=summary_stats, x="load_factor_bin", y="avg_dep_delay", palette="Reds")
+
 
 plt.xlabel("Load Factor Range")
 plt.ylabel("Average Departure Delay (minutes)")
@@ -207,11 +184,31 @@ plt.grid(axis="y")
 plt.show()
 ```
 
+- 탑승률이 0~30% 구간에서는 평균 출발 지연 시간이 5.6분으로 가장 낮음
+- 탑승률이 30~50% 구간에서는 평균 출발 지연 시간이 8분으로 증가
+- 탑승률이 50~70% 구간에서는 평균 출발 지연 시간이 11.6분으로 상승
+- 탑승률이 70~90% 구간에서는 평균 출발 지연 시간이 12.7분으로 증가
+- 탑승률이 90~100% 구간에서는 평균 출발 지연 시간이 14.2분으로 가장 길어짐
+
+
 ---
+
+<div class="section-title">4.1 탑승률과 항공편 지연 관계</div>
 
 #### 결과
 
+
+<div class="num">
+✅ **탑승률**에 따라서 출발 지연 시간이 꾸준히 **증가**하는 패턴 확인
+
+✅ **만석에 가까울수록** 지연 시간이 긴 이유는 **보딩** 및 **공항 운영상**의 복합적인 요소 때문일 가능성이 큼
+
+✅ 탑승률과 출발 지연 사이에 **상관관계가 존재**하며, 추가적인 공항 운영 요인 분석이 필요함
+</div>
+
+
 ---
+
 
 ### 4.2 제조사별 엔진 Delay 시간 분석
 
@@ -381,3 +378,65 @@ plt.xticks(rotation=40,fontsize=16, fontweight='bold');
 </div>
 
 </div>
+
+---
+
+#### 4.3 제조사별 엔진 지연 시간 원인 도출
+
+- 앞선 결과에서 더 자세한 원인을 분석하고자함
+
+```{python}
+#| code-fold: true
+delay_time_top["flight_type"] = "bad flight"
+delay_time_bottom["flight_type"] = "good flight"
+concat_data = pd.concat([delay_time_top, delay_time_bottom], axis=0)
+df = pd.merge(concat_data,df, on=['manufacturer','model'])
+
+delay_time_bottom.head(2)
+concat_data.columns
+df.columns
+```
+
+---
+
+
+```{python}
+#| code-fold: true
+count_avg1 = df.groupby(['manufacturer','manu_model','flight_type','manuf_year'])['delay_time'].agg(['mean','count']).reset_index()
+
+count_avg1.head(2)
+```
+
+---
+
+
+```{python}
+#| code-fold: true
+sns.scatterplot(data=count_avg1, x='manuf_year', y='mean', hue='flight_type', palette='viridis')
+plt.legend(title='flight_type', bbox_to_anchor=(1.05, 0.5), loc='center left')
+
+# 그래프 제목과 레이블
+plt.title('Scatterplot: year vs Departure Delay')
+plt.xlabel('Year')
+plt.ylabel('Average Delay')
+
+# 그래프 출력
+plt.show()
+
+```
+
+---
+
+
+```{python}
+#| code-fold: true
+sns.scatterplot(data=count_avg1, x='manuf_year', y='mean', hue='manufacturer', style='flight_type', palette='tab10',s=100)
+
+plt.legend(title='Manufacturer', bbox_to_anchor=(1.05, 0.5), loc='center left')
+plt.legend(loc='upper left', fontsize=5)
+# 그래프 제목과 레이블
+plt.title('Scatterplot: year vs Departure Delay')
+plt.xlabel('Year')
+plt.ylabel('Average Delay')
+plt.show()
+```
