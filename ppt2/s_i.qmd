@@ -205,8 +205,16 @@ plt.show()
 
 ### 4.2 제조사별 엔진 Delay 시간 분석
 
-- 항공기 제조사중 가장 출발 지연이 가장 많은 제조사는?
+- 최근 화두가 되는 비행기 엔진문제
+- 그 중 '보잉'사의 엔진 문제가 많은 이야깃거리 
+- 항공기 제조사중 가장 출발 지연이 가장 많은 제조사와 그 기종은?
 
+---
+
+#### 제조사들의 결함 문제
+
+![](img\EMB.png){style="position: absolute; width: 100%; height: 100%;"}
+![](img\BOE.png){style="position: absolute; bottom: 50px; right: 50px; width: 50%; height: 60%;"}
 ---
 
 <div class="section-title">4.1 탑승률과 항공편 지연 관계</div>
@@ -237,7 +245,7 @@ df_air_time = (
 - 출발 지연시간이 가장 긴 상위 10개 및 가장 짧은 하위 10개 기종 추출
 
 ```{python}
-#| echo: true
+#| code-fold: true
 df_air_time = df_air_time.drop(df_air_time[df_air_time['count']<1000].index)
 df_air_time.shape   # 기존 147개 데이터에서 38개의 데이터로 축소
 
@@ -254,7 +262,7 @@ print(delay_time_bottom)
 - 제조사 이름의 앞 3글자 + 두 번째 단어의 첫 글자 + 모델명을 조합하여 가독성을 높임
 
 ```{python}
-#| echo: true
+#|code-fold: true
 delay_time_top['manu_model'] = delay_time_top['manufacturer'].apply(lambda x: x[:3] + (x.split()[1][0] if len(x.split()) > 1 else '')) + "/" + delay_time_top['model']
 delay_time_bottom['manu_model'] = delay_time_bottom['manufacturer'].apply(lambda x: x[:3] + (x.split()[1][0] if len(x.split()) > 1 else '')) + "/" + delay_time_bottom['model']
 print(delay_time_top)
@@ -264,34 +272,37 @@ print(delay_time_bottom)
 
 ---
 
+#### 분석 및 시각화 
+
+#### 지연 심한 항공사/기종
+
+```{python}
+#| code-fold: true
+plt.figure(figsize=(14,5))
+sns.barplot(x=delay_time_top['manu_model'],y=delay_time_top['mean'], palette="Reds_r")
+plt.ylim(0, 50)
+plt.xlabel("model by manufacturer",fontsize=20)
+plt.ylabel("delay time_mean",fontsize=20)
+plt.title("Bad flights",fontsize=20)
+plt.xticks(rotation=40,fontsize=16, fontweight='bold');
+```
+
+---
 
 #### 분석 및 시각화 
 
-
+#### 지연 심한 항공사/기종
 
 ```{python}
-# 서브플롯 생성 (1행 2열)
-fig, axes = plt.subplots(1, 2, figsize=(18, 7))
+#| code-fold: true
+plt.figure(figsize=(14,5))
+sns.barplot(x=delay_time_bottom['manu_model'],y=delay_time_bottom['mean'], palette="Blues_r")
+plt.ylim(-5, 50)
+plt.xlabel("model by manufacturer",fontsize=20)
+plt.ylabel("delay time_mean",fontsize=20)
+plt.title("Good flights",fontsize=20)
+plt.xticks(rotation=40,fontsize=16, fontweight='bold');
 
-# 출발 지연이 가장 긴 모델 TOP 10 (Bad Flights)
-sns.barplot(ax=axes[0], x=delay_time_top['manu_model'], y=delay_time_top['mean'], palette="Reds_r")
-axes[0].set_ylim(0, 50)
-axes[0].set_xlabel("Model by Manufacturer", fontsize=14)
-axes[0].set_ylabel("Average Delay Time (min)", fontsize=14)
-axes[0].set_title("Top 10 Most Delayed Aircraft Models", fontsize=16)
-axes[0].tick_params(axis='x', rotation=40)
-
-# 출발 지연이 가장 짧은 모델 TOP 10 (Good Flights)
-sns.barplot(ax=axes[1], x=delay_time_bottom['manu_model'], y=delay_time_bottom['mean'], palette="Blues_r")
-axes[1].set_ylim(-5, 10)
-axes[1].set_xlabel("Model by Manufacturer", fontsize=14)
-axes[1].set_ylabel("Average Delay Time (min)", fontsize=14)
-axes[1].set_title("Top 10 Least Delayed Aircraft Models", fontsize=16)
-axes[1].tick_params(axis='x', rotation=40)
-
-# 레이아웃 조정
-plt.tight_layout()
-plt.show()
 ```
 
 ---
@@ -306,3 +317,10 @@ plt.show()
 
 - 반대로 신뢰성이 높은 기종 Top3는 '**BOE**'사의 '**757-231**'기종, '**BOE**'사의 '**757-2Q8**' 기종, '**AIR**'사의 '**A321-211**'기종 이다.
 - 또한 제조사만 봤을때 '**BOE**'사 **5대**, '**AIRBUS**'사 **2대**, '**AIR Industry**'사 **2대**로 신뢰성 높은  model을 만들어 내는것을 알 수 있다.
+
+---
+
+### 피해야 할 비행기
+
+![BOE](img\boe717.jpg){style="position: absolute; bottom: 50px; right: 50px; width: 50%; height: 60%;"}
+![EMB](img\erj145_kp.jpg){width=60%}
