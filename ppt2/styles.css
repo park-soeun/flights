@@ -143,8 +143,9 @@
 
 
 .reveal .num p {
-    font-size: 20px;
+    font-size: 30px;
     padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .reveal pre code {

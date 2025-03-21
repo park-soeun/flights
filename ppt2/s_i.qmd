@@ -92,17 +92,17 @@ print(df.info())
 
 #### 추가 데이터 전처리
 
-
----
-
 **BTS T-100 Domestic Segment** : 미국 국내 항공편의 
+
 - 좌석 수
 - 승객 수
 - 거리 
+
 등의 정보를 제공하는 데이터로, 탑승률 분석에 활용
 
 ```{python}
 #| code-fold: true
+#| echo: false
 print(pass_df.info())
 ```
 
@@ -190,8 +190,12 @@ print(flight_grouped.head(5))
 
 </div>
 
+$$
+\text{Load Factor} = \frac{\text{Passengers}}{\text{Seats}} \times 100
+$$
 
 ```{python}
+#| code-fold: true
 merged_df = flight_grouped.merge(
     pass_grouped,
     on=['year', 'month', 'carrier', 'origin', 'dest'],
@@ -264,6 +268,14 @@ plt.show()
 6️⃣ 탑승률 구간화 및 평균 지연 시간 계산
 
 </div>
+
+<div style="font-size: 23px;">탑승률은 아래와 같이 **5개 구간**으로 나누어 분석하였습니다:</div>
+
+- 0–30%
+- 30–50%
+- 50–70%
+- 70–90%
+- 90–100%
 
 ```{python}
 #| code-fold: true
