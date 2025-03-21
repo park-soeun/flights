@@ -92,7 +92,10 @@ print(df.info())
 
 #### 추가 데이터 전처리
 
-**BTS T-100 Domestic Segment** : 미국 국내 항공편의 
+**BTS T-100 Domestic Segment** : 
+
+
+미국 국내 항공편의 
 
 - 좌석 수
 - 승객 수
@@ -180,7 +183,6 @@ print(flight_grouped.head(5))
 ---
 
 
-<div class="section-title">4.1 탑승률과 항공편 지연 관계</div>
 
 <div class="num">
 
@@ -288,6 +290,9 @@ print(summary_stats)
 
 ---
 
+<div class="section-title">4.1 탑승률과 항공편 지연 관계</div>
+
+
 
 ```{python}
 #| code-fold: true
@@ -307,6 +312,7 @@ plt.show()
 
 ---
 
+<div class="section-title">4.1 탑승률과 항공편 지연 관계</div>
 
 
 ```{python}
