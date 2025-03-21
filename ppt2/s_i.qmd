@@ -92,6 +92,24 @@ print(df.info())
 
 #### 추가 데이터 전처리
 
+
+---
+
+**BTS T-100 Domestic Segment** : 미국 국내 항공편의 
+- 좌석 수
+- 승객 수
+- 거리 
+등의 정보를 제공하는 데이터로, 탑승률 분석에 활용
+
+```{python}
+#| code-fold: true
+print(pass_df.info())
+```
+
+
+---
+
+
 <div class="num">
 
 
@@ -99,16 +117,20 @@ print(df.info())
 
 ```{python}
 #| echo: true
+#| code-fold: true
+print('외부 데이터의 `origin` 유니크 값')
 print(pass_df['origin'].unique())
 ori_list = df['origin'].unique()
 pass_df = pass_df[pass_df['origin'].isin(ori_list)]
 
 # dest
+print('외부 데이터의 `dest` 유니크 값')
 print(pass_df['dest'].unique())
 dest_list = df['dest'].unique()
 pass_df = pass_df[pass_df['dest'].isin(dest_list)]
 
 # carrier
+print('외부 데이터의 `carrier` 유니크 값')
 print(pass_df['carrier'].unique())
 carrier_list = df['carrier'].unique()
 pass_df = pass_df[pass_df['carrier'].isin(carrier_list)]
