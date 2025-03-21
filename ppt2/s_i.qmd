@@ -11,6 +11,7 @@ format:
     footer: "Team 6 | LS BigData School | 2025"  # 푸터 설정
     logo: "logo3.png"  # 로고 삽입
     echo: true
+    overflow-y: true
 ---
 
 ## 1. 분석 개요
@@ -91,62 +92,111 @@ print(df.info())
 
 #### 추가 데이터 전처리
 
-**탑승률을 계산하기 위해 필요한 전처리 과정**
+<div class="num">
 
-<div class=num>
+
 1️⃣ `t100.csv`(외부 데이터)에서 기존 `flights.csv`에 있는 **출발지(origin), 목적지(dest), 항공사(carrier)**만 필터링
 
 ```{python}
 #| echo: true
-#| code-fold: true
-# origin#| 
+print(pass_df['origin'].unique())
 ori_list = df['origin'].unique()
 pass_df = pass_df[pass_df['origin'].isin(ori_list)]
 
 # dest
+print(pass_df['dest'].unique())
 dest_list = df['dest'].unique()
 pass_df = pass_df[pass_df['dest'].isin(dest_list)]
 
 # carrier
+print(pass_df['carrier'].unique())
 carrier_list = df['carrier'].unique()
 pass_df = pass_df[pass_df['carrier'].isin(carrier_list)]
 ```  
 
+</div>
+
+---
+
+
+<div class="num">
+
 2️⃣ 탑승률 계산을 위해 연, 월, 항공사, 출발지, 도착지 기준으로 `seats`(좌석 수)와 `passengers`(승객 수)를 합산
 
-```{python}
-#| code-fold: true
+</div>
 
+```{python}
 pass_grouped = pass_df.groupby(['year', 'month', 'carrier', 'origin', 'dest'])[['seats', 'passengers']].sum().reset_index()
+
+print(pass_df.info())
 ```
 
+
+---
+
+
+<div class="num">
+
+
 3️⃣ 기존 항공편 데이터(`flights.csv`)와 그룹화 기준을 맞춰 `flight_count`, `avg_dep_delay`, `avg_arr_delay` 계산
+
+</div>
+
+
 ```{python}
-#| code-fold: true
 flight_grouped = df.groupby(['year', 'month', 'carrier', 'origin', 'dest']).agg(
     flight_count=('flight', 'count'),
     avg_dep_delay=('dep_delay', 'mean'),
     avg_arr_delay=('arr_delay', 'mean'),
     total_distance=('distance', 'sum')
     ).reset_index()
+
+print(flight_grouped.head(5))
 ```
 
 
+---
+
+
+<div class="section-title">4.1 탑승률과 항공편 지연 관계</div>
+
+<div class="num">
+
+
 4️⃣ 두 데이터를 병합하여 `load_factor = passengers / seats` 계산
+
+
+</div>
+
+
 ```{python}
-#| code-fold: true
 merged_df = flight_grouped.merge(
     pass_grouped,
     on=['year', 'month', 'carrier', 'origin', 'dest'],
 )
 
 merged_df['load_factor'] = merged_df['passengers'] / merged_df['seats']
+
+print(merged_df[['passengers', 'seats', 'load_factor']])
 ```
+
+
+---
+
+<div class="section-title">4.1 탑승률과 항공편 지연 관계</div>
+
+
+<div class="num">
+
 
 5️⃣ 이상치 제거(IQR 방식)
 
+
+</div>
+
 ```{python}
-#| echo: false
+#| echo: true
+#| code-fold: true
 def remove_outliers(df, column):
     Q1 = df[column].quantile(0.25)  # 1사분위수 (Q1)
     Q3 = df[column].quantile(0.75)  # 3사분위수 (Q3)
@@ -156,26 +206,79 @@ def remove_outliers(df, column):
     return df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
 
 cleaned_df = remove_outliers(merged_df, "avg_dep_delay")
-
 ```
 
 
-</div>
+```{python}
+#| echo: false
+# 서브플롯 생성 (1행 2열)
+fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+
+sns.boxplot(data=merged_df, y="avg_dep_delay", ax=axes[0], color="lightcoral")
+axes[0].set_title("Before Outlier Removal")
+axes[0].set_ylabel("Average Departure Delay (minutes)")
+axes[0].set_xlabel("")
+axes[0].grid(True)
+
+sns.boxplot(data=cleaned_df, y="avg_dep_delay", ax=axes[1], color="lightblue")
+axes[1].set_title("After Outlier Removal")
+axes[1].set_ylabel("")  # 중복되는 y축 라벨 제거
+axes[1].set_xlabel("")
+axes[1].grid(True)
+
+# 레이아웃 조정
+plt.tight_layout()
+plt.show()
+```
+
 
 ---
 
+
 <div class="section-title">4.1 탑승률과 항공편 지연 관계</div>
 
-#### 분석 및 시각화 
+<div class="num">
 
+6️⃣ 탑승률 구간화 및 평균 지연 시간 계산
+
+</div>
 
 ```{python}
 #| code-fold: true
 cleaned_df["load_factor_bin"] = pd.cut(cleaned_df["load_factor"], bins=[0, 0.3, 0.5, 0.7, 0.9, 1], labels=["0-30%", "30-50%", "50-70%", "70-90%", "90-100%"])
 summary_stats = cleaned_df.groupby("load_factor_bin")[["avg_dep_delay", "avg_arr_delay"]].mean().reset_index()
+
+print(summary_stats)
+```
+
+
+---
+
+
+```{python}
+#| code-fold: true
+
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=summary_stats, x="load_factor_bin", y="avg_dep_delay", marker="o", label="Departure Delay (min)", color="blue")
+sns.lineplot(data=summary_stats, x="load_factor_bin", y="avg_arr_delay", marker="s", label="Arrival Delay (min)", color="red")
+
+plt.xlabel("Load Factor Range")
+plt.ylabel("Average Delay Time (minutes)")
+plt.title("Average Departure/Arrival Delay by Load Factor")
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+
+---
+
+
+
+```{python}
+#| code-fold: true
 plt.figure(figsize=(12, 4))
 sns.barplot(data=summary_stats, x="load_factor_bin", y="avg_dep_delay", palette="Reds")
-
 
 plt.xlabel("Load Factor Range")
 plt.ylabel("Average Departure Delay (minutes)")
