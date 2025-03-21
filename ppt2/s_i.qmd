@@ -426,7 +426,7 @@ count_avg.head(2)
 
 ```{python}
 #| code-fold: true
-sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='flight_type', palette='viridis')
+sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='flight_type', palette='viridis', s=300)
 plt.legend(title='flight_type', bbox_to_anchor=(1.05, 0.5), loc='center left')
 
 # 그래프 제목과 레이블
@@ -454,7 +454,7 @@ plt.show()
 ```{python}
 #| code-fold: true
 
-sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='manufacturer', style='flight_type', palette='tab10',s=100)
+sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='manufacturer', style='flight_type', palette='tab10',s=300)
 
 plt.legend(title='Manufacturer', bbox_to_anchor=(1.05, 0.5),loc='center left')
 # 그래프 제목과 레이블
@@ -475,7 +475,7 @@ plt.show()
 
 ```{python}
 #| code-fold: true
-sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='seats', style='flight_type', palette='tab20',s=100)
+sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='seats', style='flight_type', palette='tab20',s=300)
 
 plt.legend(title='Manufacturer', bbox_to_anchor=(1.05, 0.5),loc='center left')
 # 그래프 제목과 레이블
@@ -497,7 +497,7 @@ plt.show()
 ```{python}
 #| code-fold: true
 palette = sns.color_palette("tab20", n_colors=18)
-sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='model',style='flight_type',  palette= palette,s=100)
+sns.scatterplot(data=count_avg, x='manuf_year', y='delay_time', hue='model',style='flight_type',  palette= palette,s=300)
 # 그래프 제목과 레이블
 plt.legend(title='label', bbox_to_anchor=(1.05, 0.5), loc='center left')
 plt.title('Scatterplot: year vs Average Delay')
